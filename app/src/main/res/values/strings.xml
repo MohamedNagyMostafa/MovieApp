@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">dddd</string>
+    <string name="action_settings">Settings</string>
+    <string name="settings_sort_key">Sort</string>
+    <string name="settings_title">Setting Activity</string>
+
+    <!-- recycle_movies / fragment_details strings -->
+    <string name="released_date">Release Date</string>
+    <string name="released_date_main">Date</string>
+    <string name="rating">Rating</string>
+
+    <!--- fragment_details strings -->
+    <string name="vote_count">Vote Count</string>
+    <string name="description_image">Image from the movie</string>
+    <string name="description_vote_count_image">Image of vote count</string>
+    <string name="description_rating_image">Image of rating</string>
+    <string name="description_release_date_image">Image of release date</string>
+    <string name="description_trailer">Trailer of the movie</string>
+    <string name="settings_sort_label">Sort By</string>
+    <string name="settings_sort_default">popularity.desc</string>
+    <string name="settings_sort_favorite">favorite</string>
+
+    <!--- empty view strings -->
+    <string name="no_grid_movie">No movies to show</string>
+    <string name="check_network">Check your network connection</string>
+    <string name="refresh_screen">Then refresh the movies list</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

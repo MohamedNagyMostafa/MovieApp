@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings_title">
+
+    <ListPreference
+        android:entries="@array/data_sort_keys"
+        android:entryValues="@array/data_sort_values"
+        android:key="@string/settings_sort_key"
+        android:summary="Most Popular Movies"
+        android:title="@string/settings_sort_label"/>
+
+</PreferenceScreen>
+

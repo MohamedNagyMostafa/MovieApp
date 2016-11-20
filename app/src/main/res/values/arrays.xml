@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="data_sort_keys">
+
+        <item>Most Popular Movies</item>
+        <item>Highest Rated Movies</item>
+        <item>Favorite Movies</item>
+
+    </string-array>
+
+    <string-array name="data_sort_values">
+
+        <item>popularity.desc</item>
+        <item>vote_average.desc</item>
+        <item>favorite</item>
+
+    </string-array>
+
+</resources>

@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="@drawable/touch_selector">
+
+    <ImageView
+        android:id="@+id/poster_image_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:translationX="150dp"
+        android:padding="8dp" />
+
+    <LinearLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#4caf50"
+                android:text="@string/released_date_main" />
+
+            <TextView
+                android:paddingTop="4dp"
+                android:layout_width="wrap_content"
+                android:textColor="#4caf50"
+                android:layout_height="wrap_content"
+                android:text="@string/rating"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/release_date_text"
+                android:layout_width="wrap_content"
+                android:alpha="0"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"/>
+
+            <RatingBar
+                android:layout_marginTop="4dp"
+                android:id="@+id/rating_ratingBar"
+                android:layout_width="wrap_content"
+                android:alpha="0"
+                android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:numStars="5"
+                android:isIndicator="true" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line_view"
+        android:visibility="invisible"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:alpha="0.5"
+        android:background="#00c853" />
+
+</LinearLayout>
