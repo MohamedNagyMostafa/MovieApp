@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication;
+package com.example.mohamednagy.myapplication.Ui;
 
 import android.net.Uri;
 
