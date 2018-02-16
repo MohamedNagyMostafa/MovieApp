@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String SORT_POPULAR_SETTING_VALUE = "popularity.desc";
-    private static final String SORT_RATING_SETTING_VALUE = "vote_average.desc";
+    private static final String SORT_POPULAR_SETTING_VALUE = "popular";
+    private static final String SORT_RATING_SETTING_VALUE = "top_rated";
     private static final String SORT_FAVORITE_SETTING_VALUE = "favorite";
     private static final String SORT_POPULAR_SUMMARY = "Most popular movies";
     private static final String SORT_RATING_SUMMARY = "Highest rated movies";

@@ -14,7 +14,7 @@ public class DataNetworkLoader extends AsyncTaskLoader<Void> {
 
     private  String sortType ;
     private static final String BASE_URL =
-            "https://api.themoviedb.org/3/discover/movie?";
+            "https://api.themoviedb.org/3/movie";
 
     @Override
     protected void onStartLoading() {
