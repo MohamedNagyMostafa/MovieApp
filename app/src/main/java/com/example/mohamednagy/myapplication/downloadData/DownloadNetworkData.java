@@ -39,6 +39,7 @@ public class DownloadNetworkData {
 
             try {
                 url = createUrl(sortType, baseURL);
+                Log.e("url",url.toString());
             } catch (MalformedURLException e) {
                 Log.e("URL create Error", e.toString());
             }
@@ -85,15 +86,14 @@ public class DownloadNetworkData {
         }
     }
 
-    private static URL createUrl(String sortParam,String baseURL)
+    private static URL createUrl(String sortType,String baseURL)
             throws MalformedURLException{
 
-        final String SORT = "sort_by";
         final String API_KEY = "api_key";
         final String Key_PARAM = "0602c564bf48e42db8295fe9d5f8f4a7";
 
         Uri UriBuilder = Uri.parse(baseURL).buildUpon()
-                .appendQueryParameter(SORT,sortParam)
+                .appendPath(sortType)
                 .appendQueryParameter(API_KEY,Key_PARAM)
                 .build();
 

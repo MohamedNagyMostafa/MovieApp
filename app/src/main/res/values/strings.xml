@@ -17,7 +17,7 @@
     <string name="description_release_date_image">Image of release date</string>
     <string name="description_trailer">Trailer of the movie</string>
     <string name="settings_sort_label">Sort By</string>
-    <string name="settings_sort_default">popularity.desc</string>
+    <string name="settings_sort_default">popular</string>
     <string name="settings_sort_favorite">favorite</string>
 
     <!--- empty view strings -->

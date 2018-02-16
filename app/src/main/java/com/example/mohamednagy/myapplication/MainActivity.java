@@ -28,43 +28,8 @@ public class MainActivity extends AppCompatActivity
 
         if(mainActivityFragment != null)
             mainActivityFragment.setUriListener(this);
-        Log.e("opopopop","onResume");
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("opopopop","onStart");
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("opopopop","onStop");
-
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("opopopop","onRestart");
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("opopopop","onDestroy");
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("opopopop","onPause");
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +56,6 @@ public class MainActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Hide App name
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        Log.e("opopopop","onCreate");
-
 
     }
 

@@ -11,8 +11,8 @@
 
     <string-array name="data_sort_values">
 
-        <item>popularity.desc</item>
-        <item>vote_average.desc</item>
+        <item>popular</item>
+        <item>top_rated</item>
         <item>favorite</item>
 
     </string-array>
