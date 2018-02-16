@@ -39,6 +39,7 @@ public class DownloadNetworkData {
 
             try {
                 url = createUrl(sortType, baseURL);
+                Log.e("url",url.toString());
             } catch (MalformedURLException e) {
                 Log.e("URL create Error", e.toString());
             }
