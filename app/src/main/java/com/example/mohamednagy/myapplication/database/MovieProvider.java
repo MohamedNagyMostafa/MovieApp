@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Created by mohamednagy on 11/5/2016.
@@ -197,7 +196,11 @@ public class MovieProvider extends ContentProvider{
 
         if(columnId  > 0 ){
             uriInsert = MovieContract.MovieMainEntry.buildMovieContentUri(columnId);
-            Log.e("col ",String.valueOf(columnId));
+            /*
+             * Test
+             * Log.e("col ",String.valueOf(columnId));
+             */
+
         }
 
         else{

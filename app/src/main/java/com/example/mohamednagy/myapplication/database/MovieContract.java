@@ -20,6 +20,8 @@ public class MovieContract {
 
     private static final String INTEGER = " INTEGER";
 
+    private static final String DEFAULT = " DEFAULT";
+
     private static final String TEXT = " TEXT";
 
     private static final String BLOB = " BLOB";
@@ -67,6 +69,10 @@ public class MovieContract {
 
         public static final int NUMBER_OF_COLUMNS =  10;
 
+        public static final int IS_FAVORITE= 100;
+
+        public static final int IS_NOT_FAVORITE = 101;
+
         //TABLE BUILD COMPONENTS
         public static final String CREATE_MOVIE_MAIN_TABLE = "CREATE TABLE " +
                 TABLE_NAME + "(" + _ID + INTEGER + PRIMARY_KEY + AUTO_INCREMENT + "," +
@@ -78,12 +84,9 @@ public class MovieContract {
                 OVERVIEW_MOVIE_COLUMN + TEXT + NOT_NULL + "," +
                 VOTE_COUNT_COLUMN + INTEGER + NOT_NULL + "," +
                 VOTE_RATING_COLUMN + REAL + NOT_NULL + "," +
-                FAVORITE_MOVIE_COLUMN + INTEGER + NOT_NULL + "," +
+                FAVORITE_MOVIE_COLUMN + INTEGER + NOT_NULL +  DEFAULT + " " +
+                String.valueOf(IS_NOT_FAVORITE)+"," +
                 UNIQUE +"("+ORIGINAL_TITLE_COLUMN+")"+ON_CONFLICT_REPLACE + ");";
-
-        public static final int IS_FAVORITE= 100;
-
-        public static final int IS_NOT_FAVORITE = 101;
 
         public static Uri buildMovieContentUri(long id){
             return ContentUris.withAppendedId(MOVIE_MAIN_CONTENT_URI,id);

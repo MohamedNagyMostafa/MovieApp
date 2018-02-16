@@ -8,12 +8,31 @@
     android:orientation="vertical"
     android:background="@drawable/touch_selector">
 
-    <ImageView
-        android:id="@+id/poster_image_imageView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:translationX="150dp"
-        android:padding="8dp" />
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/poster_image_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:translationX="150dp"
+            android:layout_margin="8dp" />
+
+        <ImageView
+            android:id="@+id/movie_favorite_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:translationX="150dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:alpha="0"
+            android:src="@drawable/green_star"/>
+
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:baselineAligned="false"

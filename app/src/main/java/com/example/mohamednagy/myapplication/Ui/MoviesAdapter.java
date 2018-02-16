@@ -45,10 +45,7 @@ public class MoviesAdapter extends CursorAdapter {
         return view;
     }
 
-    @Override
-    public Object getItem(int position) {
-        return super.getItem(position);
-    }
+
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
@@ -67,6 +64,9 @@ public class MoviesAdapter extends CursorAdapter {
                 cursor.getFloat(MovieDataBaseControl.getMovieVoteRating(columnsCount));
         final byte[] MOVIE_POSTER_IMAGE_DATABASE =
                 cursor.getBlob(MovieDataBaseControl.getMoviePosterImage(columnsCount));
+        final String ORIGINAL_TITLE_MOVIE =
+                cursor.getString(MovieDataBaseControl.getMovieOriginalTitle(columnsCount));
+
 
         if(MOVIE_POSTER_IMAGE_DATABASE != null)
             viewHolder.MOVIE_POSTER_IMAGE.setImageBitmap(
@@ -77,11 +77,8 @@ public class MoviesAdapter extends CursorAdapter {
         }
 
         // Set Star for Movies which existed in favorite list
-        if(isMovieInFavoriteList(
-                cursor.getString(
-                        MovieDataBaseControl.getMovieOriginalTitle(
-                                columnsCount)))){
-            /*
+        if(isMovieInFavoriteList(ORIGINAL_TITLE_MOVIE)){
+              /*
              * Test
              * Log.e("movie star","is valid");
              */
@@ -93,7 +90,6 @@ public class MoviesAdapter extends CursorAdapter {
                     viewHolder.MOVIE_POSTER_IMAGE, viewHolder.MOVIE_RATING_BAR,
                     viewHolder.MOVIE_RELEASE_DATE,viewHolder.MOVIE_LINE_VIEW,
                     viewHolder.MOVIE_FAVORITE_IMAGE);
-
         }else{
             viewHolder.MOVIE_FAVORITE_IMAGE.setTranslationX(0);
 

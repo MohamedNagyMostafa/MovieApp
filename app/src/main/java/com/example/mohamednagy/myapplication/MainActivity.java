@@ -5,15 +5,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.mohamednagy.myapplication.Ui.UriListener;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 
 public class MainActivity extends AppCompatActivity
-    implements UriListener{
+    implements UriListener {
 
     private static final String MAIN_FRAGMENT_TAG ="MainFragment";
 
@@ -26,6 +28,42 @@ public class MainActivity extends AppCompatActivity
 
         if(mainActivityFragment != null)
             mainActivityFragment.setUriListener(this);
+        Log.e("opopopop","onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("opopopop","onStart");
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("opopopop","onStop");
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("opopopop","onRestart");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("opopopop","onDestroy");
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("opopopop","onPause");
+
     }
 
     @Override
@@ -43,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         if(findViewById(R.id.detail_container) != null )
             Utility.setCurrentPaneUi(Utility.TWO_PANE_UI);
         else
-            Utility.setCurrentPaneUi(Utility.TWO_PANE_UI);
+            Utility.setCurrentPaneUi(Utility.ONE_PANE_UI);
 
         // Create a Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,6 +91,9 @@ public class MainActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Hide App name
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        Log.e("opopopop","onCreate");
+
 
     }
 
@@ -86,7 +127,7 @@ public class MainActivity extends AppCompatActivity
             case Utility.ONE_PANE_UI :
 
                 Intent detailActivity = new Intent(this,DetailsActivity.class);
-                detailActivity.putExtra(Utility.URI_EXTRA_KEY,uri);
+                detailActivity.putExtra(Utility.URI_EXTRA_KEY,uri.toString());
 
                 startActivity(detailActivity);
 

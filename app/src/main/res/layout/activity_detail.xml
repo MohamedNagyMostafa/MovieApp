@@ -10,12 +10,11 @@
     <include layout="@layout/content_detail" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_detail"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_gravity="top"
         android:minHeight="?attr/actionBarSize"
-        android:title="toolbar"
         android:background="@android:color/transparent"
         app:theme="@style/Rushmore.Toolbar.Transparent"/>
 

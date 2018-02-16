@@ -65,7 +65,10 @@ public class DownloadNetworkData {
                         MovieContract.MovieMainEntry.MOVIE_MAIN_CONTENT_URI,
                         contentValues);
 
-                Log.e("inserted",String.valueOf(inserted));
+                /*
+                 * Test
+                 * Log.e("inserted",String.valueOf(inserted));
+                 */
             } catch (IOException e) {
                 Log.e("Error during Fetching", e.toString());
             } finally {
@@ -144,7 +147,11 @@ public class DownloadNetworkData {
                 for (int movieIndex = 0; movieIndex < results.length(); movieIndex++) {
                     JSONObject movieJSON = results.getJSONObject(movieIndex);
                     ContentValues contentValues = new ContentValues();
-                    Log.e("movie n ",String.valueOf(movieIndex));
+
+                    /*
+                     */
+                      Log.e("movie n ",String.valueOf(movieIndex));
+
                     posterImagePath = movieJSON.getString("poster_path");
                     backdropImagePath = movieJSON.getString("backdrop_path");
                     originalTitle = movieJSON.getString("original_title");
@@ -159,8 +166,11 @@ public class DownloadNetworkData {
                     else{
                         posterImageAsBytes = null;
                     }
-                    Log.e("image",String.valueOf(posterImageAsBytes));
 
+                    /*
+                     * Test
+                     * Log.e("image",String.valueOf(posterImageAsBytes));
+                     */
                     contentValues.put(
                             MovieContract.MovieMainEntry.MOVIE_ID_COLUMN,movieID);
                     contentValues.put(

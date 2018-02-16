@@ -5,6 +5,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.downloadData.DownloadNetworkData;
+import com.example.mohamednagy.myapplication.helperClasses.Utility;
 
 /**
  * Created by mohamednagy on 10/8/2016.
@@ -30,7 +31,7 @@ public class DataNetworkLoader extends AsyncTaskLoader<Void> {
     public Void loadInBackground() {
         if(!sortType.equals(getContext().getString(R.string.settings_sort_favorite)))
             DownloadNetworkData.FetchDataFromURL(sortType,BASE_URL,getContext());
-
+        Utility.setLoaderState(false);
         return null;
     }
 

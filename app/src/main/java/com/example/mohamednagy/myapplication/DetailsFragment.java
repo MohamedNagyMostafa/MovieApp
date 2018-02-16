@@ -1,6 +1,5 @@
 package com.example.mohamednagy.myapplication;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,10 +25,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
+import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.downloadData.DownloadDetailsImage;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
@@ -52,9 +53,9 @@ public class DetailsFragment extends Fragment
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
     private ImageDownloadLaunch imageDownloadLaunch;
+    private static FavoriteStarListener mFavoriteStarListener;
 
     private ImageView backDropImage;
-    private ImageView trailerImageView;
     private ImageView ratingImageView;
     private ImageView dateImageView;
     private ImageView voteImageView;
@@ -86,7 +87,12 @@ public class DetailsFragment extends Fragment
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean animate;
+
+                    /*
+                     * Test
+                     * Log.e("Column ",String.valueOf(ContentUris.parseId(uri)));
+                     */
+                    boolean isFavorite;
                     // check if data is existed in favorite table
                     if (movieInFavoriteList()) {
                         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + " =?";
@@ -97,9 +103,14 @@ public class DetailsFragment extends Fragment
                                 selectionArg
                         );
 
-                        Log.e("delete num ", String.valueOf(delectnum) + " is Done");
+                        /*
+                     * Test
+                     * Log.e("delete num ", String.valueOf(delectnum) + " is Done");
+                     */
+                        // Delete movie as favorite from database
+                        setMovieAsFavoriteList(false);
 
-                        animate = true;
+                        isFavorite = true;
                     } else {
                         ContentValues contentValues = getContentValues();
 
@@ -107,17 +118,26 @@ public class DetailsFragment extends Fragment
                                 MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI
                                 , contentValues);
 
-                        animate = false;
+                        isFavorite = false;
+
+                        // Insert movie as favorite to database
+                        setMovieAsFavoriteList(true);
 
                         Toast.makeText(
                                 getActivity(),"Movie inserted in favorite list",Toast.LENGTH_SHORT)
                                 .show();
 
-                        Log.e("insert num ", String.valueOf(ContentUris.parseId(uriColumn)) + " is Done");
+                        /*
+                         * Test
+                         * Log.e("insert num ", String.valueOf(ContentUris.parseId(uriColumn)) + " is Done");
+                         */
                     }
+                    // Floating button rotation
+                    AppAnimation.floatingButtonFavoriteAnimation(floatingActionButtonFavorite,isFavorite);
+                    // Display favorite star for current movie in movies list
+                    mFavoriteStarListener.showFavoriteStar(isFavorite);
 
-                    AppAnimation.floatingButtonFavoriteAnimation(floatingActionButtonFavorite,animate);
-
+                    // In favorite list
                     if (uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)) {
                         setFloatingActionButton();
                     } else {
@@ -155,11 +175,10 @@ public class DetailsFragment extends Fragment
 
         if(bundle != null) {
             uri = Uri.parse(bundle.getString(Utility.URI_EXTRA_KEY));
-            Log.e("bundle","is not null");
+            //Log.e("bundle","is not null");
         }
 
         backDropImage = (ImageView) rootView.findViewById(R.id.backdrop_imageView);
-        trailerImageView = (ImageView) rootView.findViewById(R.id.trailerImageView);
         dateImageView = (ImageView) rootView.findViewById(R.id.dateImageView);
         voteImageView = (ImageView) rootView.findViewById(R.id.voteImageView);
         ratingImageView = (ImageView) rootView.findViewById(R.id.ratingImageView);
@@ -187,13 +206,27 @@ public class DetailsFragment extends Fragment
             getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, this);
         }
 
+        if(rootView.findViewById(R.id.land_space_mode) != null){
+
+            AppAnimation.landscapeAnimation(
+                    (LinearLayout) rootView.findViewById(R.id.movie_items_list),
+                    floatingActionButtonFavorite,
+                    (RelativeLayout) rootView.findViewById(R.id.movie_image_component)
+                    );
+        }
+
+
         return rootView;
+    }
+
+    public static void setFavoriteStarListener(
+            FavoriteStarListener favoriteStarListener){
+        mFavoriteStarListener = favoriteStarListener;
     }
 
     @Override
     public void launchImageLoader(LoaderManager.LoaderCallbacks loaderCallbacks) {
         getLoaderManager().initLoader(DONWLOAD_IMAGE_LOADER_ID,null,loaderCallbacks);
-
     }
 
     @Override
@@ -228,6 +261,7 @@ public class DetailsFragment extends Fragment
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.e(uri.getPath(),String.valueOf(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)));
         if(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME))
+
             return new CursorLoader(
                     getActivity(),
                     uri,
@@ -307,7 +341,7 @@ public class DetailsFragment extends Fragment
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        loader = null;
     }
 
     private boolean movieInFavoriteList(){
@@ -315,14 +349,26 @@ public class DetailsFragment extends Fragment
         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + "=?";
         String[] selectionArgs = {originalTextView.getText().toString()};
 
-        Cursor cursor = getContext().getContentResolver().query(
-                MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI,
-                null,
-                selection,
-                selectionArgs,
-                null
-                );
-        return (cursor.moveToFirst());
+
+        Cursor cursor = null;
+        boolean check =false ;
+        try {
+            cursor = getContext().getContentResolver().query(
+                    MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI,
+                    null,
+                    selection,
+                    selectionArgs,
+                    null
+            );
+
+            check =  cursor.moveToFirst();
+        }catch (NullPointerException e){
+            Log.e("Error",e.toString());
+        }finally {
+            if(cursor !=null)
+                cursor.close();
+        }
+        return check;
     }
 
     private ContentValues getContentValues(){
@@ -340,6 +386,7 @@ public class DetailsFragment extends Fragment
             return null;
 
         int columnsCount = cursor.getColumnCount();
+
 
         contentValues.put(
                 MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN,
@@ -410,5 +457,26 @@ public class DetailsFragment extends Fragment
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setMovieAsFavoriteList(boolean isFavorite){
+
+        String selection = MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN +"=?";
+        String[] selectionArgs = {originalTextView.getText().toString()};
+
+        ContentValues contentValues = new ContentValues();
+        if(isFavorite)
+            contentValues.put(MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN,
+                    MovieContract.MovieMainEntry.IS_FAVORITE);
+        else
+            contentValues.put(MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN,
+                    MovieContract.MovieMainEntry.IS_NOT_FAVORITE);
+
+        int col = getContext().getContentResolver().update(
+                MovieContract.MovieMainEntry.MOVIE_MAIN_CONTENT_URI,
+                contentValues,
+                selection,
+                selectionArgs
+        );
     }
 }
