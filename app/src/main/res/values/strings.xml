@@ -27,4 +27,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="details_sc_saver_id">details saver</string>
+    <string name="details_sc_saver_image_id">details saver image</string>
+    <string name="main_sc_saver_id">details saver</string>
 </resources>

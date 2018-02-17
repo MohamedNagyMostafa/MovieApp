@@ -57,17 +57,20 @@ public class Utility {
         }
         Bitmap imageAsBitmap = BitmapFactory.decodeStream(inputStream);
 
-        ByteArrayOutputStream byteArrayOutputStream =
-                new ByteArrayOutputStream();
-        imageAsBitmap.compress(Bitmap.CompressFormat.PNG,100,
-                byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
 
-        return bytes;
+        return converBitmapToByteArray(imageAsBitmap);
     }
 
     public static Bitmap convertByteArrayToBitmap(byte[] imageAsBytes){
         return BitmapFactory.decodeByteArray(imageAsBytes , 0, imageAsBytes.length);
+    }
+
+    public static byte[] converBitmapToByteArray(Bitmap imageAsBitmap){
+        ByteArrayOutputStream byteArrayOutputStream =
+                new ByteArrayOutputStream();
+        imageAsBitmap.compress(Bitmap.CompressFormat.PNG,100,
+                byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 
     public static boolean getLoaderState(){
@@ -78,4 +81,7 @@ public class Utility {
         loaderState = currentLoaderState;
     }
 
+    public static String optText(String string){
+        return (string == null)?"":string;
+    }
 }
