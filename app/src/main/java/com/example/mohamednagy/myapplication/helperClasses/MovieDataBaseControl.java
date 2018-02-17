@@ -28,15 +28,14 @@ public class MovieDataBaseControl {
 
     // Columns keys
     public static final int _ID_MAIN_COLUMN = 0;
-    public static final int MOVIE_MAIN_ID = 1;
-    public static final int MOVIE_MAIN_ORIGINAL_TITLE = 2;
-    public static final int MOVIE_MAIN_OVERVIEW = 3;
-    public static final int MOVIE_MAIN_FAVORITE = 4;
-    public static final int MOVIE_MAIN_VOTE_COUNT = 5;
-    public static final int MOVIE_MAIN_POSTER_IMAGE = 6;
-    public static final int MOVIE_MAIN_RELEASE_DATE = 7;
-    public static final int MOVIE_MAIN_VOTE_RATING = 8;
-    public static final int MOVIE_MAIN_BACKDROP_IMAGE = 9;
+    private static final int MOVIE_MAIN_ID = 1;
+    private static final int MOVIE_MAIN_ORIGINAL_TITLE = 2;
+    private static final int MOVIE_MAIN_OVERVIEW = 3;
+    private static final int MOVIE_MAIN_VOTE_COUNT = 5;
+    private static final int MOVIE_MAIN_POSTER_IMAGE = 6;
+    private static final int MOVIE_MAIN_RELEASE_DATE = 7;
+    private static final int MOVIE_MAIN_VOTE_RATING = 8;
+    private static final int MOVIE_MAIN_BACKDROP_IMAGE = 9;
 
     // FavoriteMovie table
     public static final String []PROJECTION_FAVORITE_TABLE = {
@@ -52,15 +51,14 @@ public class MovieDataBaseControl {
     };
 
     // Columns keys
-    public static final int _ID__FAVORITE_COLUMN = 0;
-    public static final int FAVORITE_MOVIE_ID = 1;
-    public static final int FAVORITE_MOVIE_ORIGINAL_TITLE = 2;
-    public static final int FAVORITE_MOVIE_OVERVIEW = 3;
-    public static final int FAVORITE_MOVIE_VOTE_COUNT = 4;
-    public static final int FAVORITE_MOVIE_POSTER_IMAGE = 5;
-    public static final int FAVORITE_MOVIE_RELEASE_DATE = 6;
-    public static final int FAVORITE_MOVIE_VOTE_RATING = 7;
-    public static final int FAVORITE_MOVIE_BACKDROP_IMAGE = 8;
+    private static final int FAVORITE_MOVIE_ID = 1;
+    private static final int FAVORITE_MOVIE_ORIGINAL_TITLE = 2;
+    private static final int FAVORITE_MOVIE_OVERVIEW = 3;
+    private static final int FAVORITE_MOVIE_VOTE_COUNT = 4;
+    private static final int FAVORITE_MOVIE_POSTER_IMAGE = 5;
+    private static final int FAVORITE_MOVIE_RELEASE_DATE = 6;
+    private static final int FAVORITE_MOVIE_VOTE_RATING = 7;
+    private static final int FAVORITE_MOVIE_BACKDROP_IMAGE = 8;
 
 
     public static int getMovieOriginalTitle(int size){
@@ -109,10 +107,6 @@ public class MovieDataBaseControl {
         return (size == MovieContract.MovieMainEntry.NUMBER_OF_COLUMNS)?
                 MOVIE_MAIN_VOTE_RATING :
                 FAVORITE_MOVIE_VOTE_RATING;
-    }
-
-    public static int getMovieMainFavorite(){
-        return MOVIE_MAIN_FAVORITE;
     }
 
 }

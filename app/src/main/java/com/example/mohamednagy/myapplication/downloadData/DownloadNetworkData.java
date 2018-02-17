@@ -27,15 +27,11 @@ import java.util.ArrayList;
  */
 public class DownloadNetworkData {
 
-    private static String msortType;
-
     public static void FetchDataFromURL(String sortType,
                                  String baseURL, Context context) {
         URL url = null;
 
         if (sortType != null) {
-
-            msortType = sortType;
 
             try {
                 url = createUrl(sortType, baseURL);
@@ -56,6 +52,8 @@ public class DownloadNetworkData {
 
                 ArrayList<ContentValues> contentValuesArrayList
                         = getDataFromJson(pageJSON);
+
+                assert contentValuesArrayList != null;
 
                 ContentValues[] contentValues = new ContentValues[contentValuesArrayList.size()];
                 contentValuesArrayList.toArray(contentValues);

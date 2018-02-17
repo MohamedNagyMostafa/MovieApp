@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -22,36 +21,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
-import com.example.mohamednagy.myapplication.downloadData.DownloadDetailsImage;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
-import com.example.mohamednagy.myapplication.loaderTasks.DownloadImageLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.ImageDownloadLaunch;
 import com.example.mohamednagy.myapplication.saver.DataSaver;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
 
 public class DetailsFragment extends Fragment
-    implements LoaderManager.LoaderCallbacks<Cursor>,DownloadDetailsImage {
+    implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private String imageURL;
     private Uri uri ;
     private int movieId;
 
-    private static final int DONWLOAD_IMAGE_LOADER_ID = 3;
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
     private static FavoriteStarListener mFavoriteStarListener;
@@ -66,7 +55,7 @@ public class DetailsFragment extends Fragment
                 public void onRefresh() {
                     if(!imageURL.equals("null")) {
                         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
-                        new ImageDownloadLaunch(DetailsFragment.this);
+                        downloadBackDropImage(imageURL);
                     }
                 }
             };
@@ -85,7 +74,7 @@ public class DetailsFragment extends Fragment
                     if (movieInFavoriteList()) {
                         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + " =?";
                         String[] selectionArg = {mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.getText().toString()};
-                        int delectnum = getContext().getContentResolver().delete(
+                        getContext().getContentResolver().delete(
                                 MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI,
                                 selection,
                                 selectionArg
@@ -102,7 +91,7 @@ public class DetailsFragment extends Fragment
                     } else {
                         ContentValues contentValues = getContentValues();
 
-                        Uri uriColumn = getContext().getContentResolver().insert(
+                        getContext().getContentResolver().insert(
                                 MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI
                                 , contentValues);
 
@@ -221,40 +210,6 @@ public class DetailsFragment extends Fragment
     }
 
     @Override
-    public void launchImageLoader(LoaderManager.LoaderCallbacks loaderCallbacks) {
-        getLoaderManager().initLoader(DONWLOAD_IMAGE_LOADER_ID,null,loaderCallbacks);
-    }
-
-    @Override
-    public DownloadImageLoader createImageLoader() {
-        return new DownloadImageLoader(getActivity(),this);
-    }
-
-    @Override
-    public Bitmap downloadImage() {
-        URL url = Utility.createUrlImage(imageURL);
-        InputStream inputStream = null;
-        try {
-            inputStream = url.openConnection().getInputStream();
-
-            return BitmapFactory.decodeStream(inputStream);
-        }catch (IOException e){
-            Log.e("eror",e.toString());
-        }
-        return null;
-    }
-
-
-    @Override
-    public void setImageToView(Bitmap imageAsBitmap) {
-        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
-        mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setImageBitmap(imageAsBitmap);
-        // store data.
-        mDetailsDataSaver.setImageData(imageAsBitmap);
-    }
-
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.e(uri.getPath(),String.valueOf(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)));
         if(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME))
@@ -309,7 +264,7 @@ public class DetailsFragment extends Fragment
 
         if(!imageURL.equals("null")) {
             mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
-            new ImageDownloadLaunch(this);
+            downloadBackDropImage(imageURL);
         }else{
             mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setImageResource(R.drawable.imageisnotvalidbackdrop);
         }
@@ -356,6 +311,8 @@ public class DetailsFragment extends Fragment
                     null
             );
 
+            assert cursor != null;
+
             check =  cursor.moveToFirst();
         }catch (NullPointerException e){
             Log.e("Error",e.toString());
@@ -377,6 +334,7 @@ public class DetailsFragment extends Fragment
                 null
         );
 
+        assert cursor != null;
         if(!cursor.moveToFirst())
             return null;
 
@@ -481,11 +439,33 @@ public class DetailsFragment extends Fragment
             contentValues.put(MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN,
                     MovieContract.MovieMainEntry.IS_NOT_FAVORITE);
 
-        int col = getContext().getContentResolver().update(
+        getContext().getContentResolver().update(
                 MovieContract.MovieMainEntry.MOVIE_MAIN_CONTENT_URI,
                 contentValues,
                 selection,
                 selectionArgs
         );
+    }
+
+    private void downloadBackDropImage(String imageURL){
+        Picasso.with(getContext())
+                .load(Utility.createUrlImage(imageURL).toString())
+                .into(mDetailsViewHolder.BACKDROP_IMAGE_VIEW, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mDetailsDataSaver.setImageData(
+                                ((BitmapDrawable)mDetailsViewHolder.BACKDROP_IMAGE_VIEW.getDrawable())
+                                        .getBitmap());
+
+                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.e("image load","Error");
+                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+                    }
+                });
+
     }
 }
