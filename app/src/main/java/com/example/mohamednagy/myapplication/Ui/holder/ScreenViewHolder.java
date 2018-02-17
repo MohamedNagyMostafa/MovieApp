@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -89,6 +90,39 @@ public class ScreenViewHolder {
                     RATING_IMAGE_VIEW,
                     VOTE_IMAGE_VIEW
             );
+        }
+    }
+
+    public static class MainViewHolder{
+        public final GridView MOVIES_GRID_VIEW;
+        public final View MOVIES_EMPTY_VIEW;
+        public final SwipeRefreshLayout SWIPE_REFRESH_LAYOUT;
+
+        public MainViewHolder(View mainView){
+            MOVIES_GRID_VIEW = mainView.findViewById(R.id.grid_movies);
+            MOVIES_EMPTY_VIEW = mainView.findViewById(R.id.empty_view);
+            SWIPE_REFRESH_LAYOUT = mainView.findViewById(R.id.swipe_refresh);
+        }
+
+        public static class AdapterViewHolder{
+            public final TextView MOVIE_RELEASE_DATE;
+            public final ImageView MOVIE_POSTER_IMAGE;
+            public final RatingBar MOVIE_RATING_BAR;
+            public final ImageView MOVIE_FAVORITE_IMAGE;
+            public final View MOVIE_LINE_VIEW;
+
+            public AdapterViewHolder(View view) {
+                MOVIE_RELEASE_DATE = (TextView)
+                        view.findViewById(R.id.release_date_text);
+                MOVIE_POSTER_IMAGE = (ImageView)
+                        view.findViewById(R.id.poster_image_imageView);
+                MOVIE_RATING_BAR = (RatingBar)
+                        view.findViewById(R.id.rating_ratingBar);
+                MOVIE_LINE_VIEW =
+                        view.findViewById(R.id.line_view);
+                MOVIE_FAVORITE_IMAGE =(ImageView)
+                        view.findViewById(R.id.movie_favorite_image);
+            }
         }
     }
 }

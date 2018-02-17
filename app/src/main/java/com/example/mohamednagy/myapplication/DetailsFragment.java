@@ -426,6 +426,7 @@ public class DetailsFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
+
     private void setMovieAsFavoriteList(boolean isFavorite){
 
         String selection = MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN +"=?";

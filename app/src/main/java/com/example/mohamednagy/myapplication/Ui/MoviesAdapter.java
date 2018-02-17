@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
@@ -38,19 +39,18 @@ public class MoviesAdapter extends CursorAdapter {
          */
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.recycle_movies, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ScreenViewHolder.MainViewHolder.AdapterViewHolder adapterViewHolder = new ScreenViewHolder.MainViewHolder.AdapterViewHolder(view);
 
-        view.setTag(viewHolder);
+        view.setTag(adapterViewHolder);
 
         return view;
     }
 
-
-
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        final ViewHolder viewHolder = (ViewHolder) view.getTag();
+        final ScreenViewHolder.MainViewHolder.AdapterViewHolder viewHolder =
+                (ScreenViewHolder.MainViewHolder.AdapterViewHolder) view.getTag();
 
         int columnsCount = cursor.getColumnCount();
 
@@ -103,28 +103,6 @@ public class MoviesAdapter extends CursorAdapter {
         viewHolder.MOVIE_RELEASE_DATE.setText(MOVIE_RELEASE_DATA_DATABASE);
     }
 
-
-    private static class ViewHolder {
-        public final TextView MOVIE_RELEASE_DATE;
-        public final ImageView MOVIE_POSTER_IMAGE;
-        public final RatingBar MOVIE_RATING_BAR;
-        public final ImageView MOVIE_FAVORITE_IMAGE;
-        public final View MOVIE_LINE_VIEW;
-
-        public ViewHolder(View view) {
-            MOVIE_RELEASE_DATE = (TextView)
-                    view.findViewById(R.id.release_date_text);
-            MOVIE_POSTER_IMAGE = (ImageView)
-                    view.findViewById(R.id.poster_image_imageView);
-            MOVIE_RATING_BAR = (RatingBar)
-                    view.findViewById(R.id.rating_ratingBar);
-            MOVIE_LINE_VIEW =
-                    view.findViewById(R.id.line_view);
-            MOVIE_FAVORITE_IMAGE =(ImageView)
-                    view.findViewById(R.id.movie_favorite_image);
-        }
-    }
-
     private boolean isMovieInFavoriteList(String originalMovie_Title){
 
         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + "=?";
@@ -140,4 +118,5 @@ public class MoviesAdapter extends CursorAdapter {
 
         return (cursor.moveToFirst());
     }
+
 }

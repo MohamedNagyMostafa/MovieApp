@@ -1,12 +1,19 @@
 package com.example.mohamednagy.myapplication;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -25,6 +32,7 @@ import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
 import com.example.mohamednagy.myapplication.Ui.MoviesAdapter;
 import com.example.mohamednagy.myapplication.Ui.UriListener;
+import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
@@ -32,6 +40,10 @@ import com.example.mohamednagy.myapplication.loaderTasks.CursorUiLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.DataNetworkLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.Loaders;
 import com.example.mohamednagy.myapplication.loaderTasks.NetworkLoaderLaunch;
+import com.example.mohamednagy.myapplication.permission.PermissionHandle;
+import com.example.mohamednagy.myapplication.saver.DataSaver;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -44,17 +56,19 @@ public class MainActivityFragment extends Fragment
     private View currentMovieView;
     private String lastSort;
     private UriListener uriListener;
+    private DataSaver.MainActivityData mainActivitySaver;
 
     private static final int DATA_NETWORK_LOADER_ID = 1;
     private static final int CURSOR_LOADER_ID = 2;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private ScreenViewHolder.MainViewHolder mainViewHolder;
 
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener =
             new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    startLoadData();
+                    if(permissionInvestigation())
+                        startLoadData();
                 }
             };
 
@@ -114,18 +128,22 @@ public class MainActivityFragment extends Fragment
          * Log.e("detail onCreateView","is called 000000");
          */
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        mainViewHolder = new ScreenViewHolder.MainViewHolder(rootView);
         moviesAdapter = new MoviesAdapter(getContext(),null,0);
-        GridView gridMovies = (GridView) rootView.findViewById(R.id.grid_movies);
-        View emptyView = rootView.findViewById(R.id.empty_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+        mainActivitySaver = new DataSaver.MainActivityData();
 
-        gridMovies.setEmptyView(emptyView);
-        gridMovies.setOnItemClickListener(onItemClickListener);
-        gridMovies.setAdapter(moviesAdapter);
+        mainViewHolder.MOVIES_GRID_VIEW.setEmptyView(mainViewHolder.MOVIES_EMPTY_VIEW);
+        mainViewHolder.MOVIES_GRID_VIEW.setOnItemClickListener(onItemClickListener);
+        mainViewHolder.MOVIES_GRID_VIEW.setAdapter(moviesAdapter);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.detailTextView);
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setColorSchemeResources(R.color.detailTextView);
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
+        if(savedInstanceState != null){
+            mainActivitySaver.setGridViewState(
+                    savedInstanceState.getParcelable(DataSaver.MainActivityData.GRID_VIEW_STATE_ID)
+            );
+        }
         return rootView;
     }
 
@@ -133,8 +151,7 @@ public class MainActivityFragment extends Fragment
     public void onResume() {
         super.onResume();
         moviesAdapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(Utility.getLoaderState());
-
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
         updateMoviesGrid();
     }
 
@@ -173,7 +190,7 @@ public class MainActivityFragment extends Fragment
          */
 
             if (databaseHasData()) {
-                    swipeRefreshLayout.setRefreshing(Utility.getLoaderState());
+                    mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
 
                     if (!isFavoriteSetting()) {
                         Toast.makeText(getActivity(),
@@ -187,7 +204,8 @@ public class MainActivityFragment extends Fragment
                      */
                     CursorUiLoader cursorUiLoader = new CursorUiLoader(this, isSortChanged());
             }else{
-                startLoadData();
+                if(permissionInvestigation())
+                    startLoadData();
             }
     }
 
@@ -204,7 +222,7 @@ public class MainActivityFragment extends Fragment
         if(networkIsConnected()) {
 
             Utility.setLoaderState(true);
-            swipeRefreshLayout.setRefreshing(Utility.getLoaderState());
+            mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
 
             NetworkLoaderLaunch networkLoaderLaunch =
                     new NetworkLoaderLaunch(this, isSortChanged());
@@ -247,7 +265,8 @@ public class MainActivityFragment extends Fragment
      */
     private boolean networkIsConnected(){
         ConnectivityManager connectivityManager =
-                (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo networkInfo =
                 connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
@@ -348,13 +367,21 @@ public class MainActivityFragment extends Fragment
          * Log.e("detail","asyncLoader for network is finished and swap adapter 00000");
          */
         // Update adapter.
-
         moviesAdapter.swapCursor(cursor);
+
+        //for orientation.
+        checkPreviousData();
+
         // Check refresh state for refresh button.
-        swipeRefreshLayout.setRefreshing(Utility.getLoaderState());
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
         // set current sort.
         sortType = getCurrentSort();
+    }
 
+    private void checkPreviousData(){
+        Parcelable previousState = mainActivitySaver.getSavingStateAndNull();
+        if(previousState != null)
+            mainViewHolder.MOVIES_GRID_VIEW.onRestoreInstanceState(previousState);
     }
 
     /**
@@ -439,4 +466,48 @@ public class MainActivityFragment extends Fragment
                 isClicked);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case PermissionHandle.REQUEST_CODE:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    startLoadData();
+                }else{
+                    //TODO add snackbar.
+                }
+        }
+    }
+
+    /**
+     * Check Permission for android 6.0 and higher.
+     * @return
+     */
+    private boolean permissionInvestigation(){
+        boolean result = true;
+        ArrayList<String> requiredPermissions = new ArrayList<>();
+
+        if(PermissionHandle.checkPermission(PermissionHandle.ACCESS_NETWORK_STATE_PERMISSION, getContext())){
+            result = false;
+            requiredPermissions.add(PermissionHandle.ACCESS_NETWORK_STATE_PERMISSION);
+        }
+
+        if(PermissionHandle.checkPermission(PermissionHandle.ACCESS_INTERNET_PERMISSION, getContext())){
+            result = false;
+            requiredPermissions.add(PermissionHandle.ACCESS_INTERNET_PERMISSION);
+        }
+
+        if(requiredPermissions.size() > 0){
+            PermissionHandle.askPermission(getContext(), requiredPermissions.toArray(new String[requiredPermissions.size()]));
+        }
+
+        return result;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(DataSaver.MainActivityData.GRID_VIEW_STATE_ID,
+                mainViewHolder.MOVIES_GRID_VIEW.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+
+    }
 }
