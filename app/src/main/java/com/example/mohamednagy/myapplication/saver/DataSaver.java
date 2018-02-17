@@ -19,8 +19,8 @@ public class DataSaver {
 
     public static class DetailsActivityData{
 
-        public final String DATA_SAVER_ID = Resources.getSystem().getString(R.string.details_sc_saver_id);
-        public final String DATA_IMAGE_SAVER_ID = Resources.getSystem().getString(R.string.details_sc_saver_image_id);
+        public final String DATA_SAVER_ID = "details sc";
+        public final String DATA_IMAGE_SAVER_ID = "details sc image";
 
         public static final int MOVIE_ORIGINAL_TITLE = 0;
         public static final int MOVIE_ID =1;

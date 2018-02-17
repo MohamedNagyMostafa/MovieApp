@@ -456,7 +456,7 @@ public class DetailsFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        Log.e("done", "saved");
         outState.putStringArray(
                 mDetailsDataSaver.DATA_SAVER_ID,
                 mDetailsDataSaver.getMovieData()
@@ -465,6 +465,7 @@ public class DetailsFragment extends Fragment
                 mDetailsDataSaver.DATA_IMAGE_SAVER_ID,
                 mDetailsDataSaver.getImageData()
         );
+        super.onSaveInstanceState(outState);
     }
 
     private void setMovieAsFavoriteList(boolean isFavorite){
