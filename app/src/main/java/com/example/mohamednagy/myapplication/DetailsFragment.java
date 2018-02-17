@@ -31,12 +31,14 @@ import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
+import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.downloadData.DownloadDetailsImage;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.loaderTasks.DownloadImageLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.ImageDownloadLaunch;
+import com.example.mohamednagy.myapplication.saver.DataSaver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,33 +54,19 @@ public class DetailsFragment extends Fragment
     private static final int DONWLOAD_IMAGE_LOADER_ID = 3;
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
-    private ImageDownloadLaunch imageDownloadLaunch;
     private static FavoriteStarListener mFavoriteStarListener;
+    private ScreenViewHolder.DetailsViewHolder mDetailsViewHolder;
+    
 
-    private ImageView backDropImage;
-    private ImageView ratingImageView;
-    private ImageView dateImageView;
-    private ImageView voteImageView;
-
-    private TextView originalTextView;
-    private TextView dateTextView;
-    private TextView overviewTextView;
-    private TextView countVoteTextView;
-    private TextView ratingTextView;
-
-    private RatingBar ratingBarView;
-    private LinearLayout trailerLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
-    private FloatingActionButton floatingActionButtonFavorite;
+    private DataSaver.DetailsActivityData mDetailsDataSaver;
 
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener =
             new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     if(!imageURL.equals("null")) {
-                        swipeRefreshLayout.setRefreshing(true);
-                        imageDownloadLaunch = new ImageDownloadLaunch(DetailsFragment.this);
+                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
+                        new ImageDownloadLaunch(DetailsFragment.this);
                     }
                 }
             };
@@ -96,7 +84,7 @@ public class DetailsFragment extends Fragment
                     // check if data is existed in favorite table
                     if (movieInFavoriteList()) {
                         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + " =?";
-                        String[] selectionArg = {originalTextView.getText().toString()};
+                        String[] selectionArg = {mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.getText().toString()};
                         int delectnum = getContext().getContentResolver().delete(
                                 MovieContract.FavoriteMovieEntry.MOVIE_FAVORITE_CONTENT_URI,
                                 selection,
@@ -133,7 +121,7 @@ public class DetailsFragment extends Fragment
                          */
                     }
                     // Floating button rotation
-                    AppAnimation.floatingButtonFavoriteAnimation(floatingActionButtonFavorite,isFavorite);
+                    AppAnimation.floatingButtonFavoriteAnimation(mDetailsViewHolder.FLOATING_ACTION_BUTTON,isFavorite);
                     // Display favorite star for current movie in movies list
                     mFavoriteStarListener.showFavoriteStar(isFavorite);
 
@@ -141,7 +129,7 @@ public class DetailsFragment extends Fragment
                     if (uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)) {
                         setFloatingActionButton();
                     } else {
-                        floatingActionButtonFavorite.setVisibility(View.INVISIBLE);
+                        mDetailsViewHolder.FLOATING_ACTION_BUTTON.setVisibility(View.INVISIBLE);
                         Toast.makeText(
                                 getContext(), "The movie is deleted from favorite list",
                                 Toast.LENGTH_SHORT).show();
@@ -168,7 +156,7 @@ public class DetailsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
-
+        mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
         Bundle bundle = getArguments();
@@ -178,30 +166,38 @@ public class DetailsFragment extends Fragment
             //Log.e("bundle","is not null");
         }
 
-        backDropImage = (ImageView) rootView.findViewById(R.id.backdrop_imageView);
-        dateImageView = (ImageView) rootView.findViewById(R.id.dateImageView);
-        voteImageView = (ImageView) rootView.findViewById(R.id.voteImageView);
-        ratingImageView = (ImageView) rootView.findViewById(R.id.ratingImageView);
-        originalTextView = (TextView) rootView.findViewById(R.id.original_title_textView);
-        dateTextView = (TextView) rootView.findViewById(R.id.details_release_date_textView);
-        overviewTextView = (TextView) rootView.findViewById(R.id.overView_Movie_textView);
-        countVoteTextView = (TextView) rootView.findViewById(R.id.vote_count_textView);
-        dateTextView = (TextView) rootView.findViewById(R.id.details_release_date_textView);
-        ratingBarView = (RatingBar) rootView.findViewById(R.id.details_rating_bar);
-        trailerLayout= (LinearLayout) rootView.findViewById(R.id.movie_trailer);
-        ratingTextView = (TextView) rootView.findViewById(R.id.rating_text_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_detail);
-
-        floatingActionButtonFavorite = (FloatingActionButton) rootView.findViewById(R.id.favorite_floating_btn);
-        swipeRefreshLayout.setColorSchemeResources(R.color.detailTextView);
-        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+       
+        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setColorSchemeResources(R.color.detailTextView);
+        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
         /// set click listeners
-        floatingActionButtonFavorite.setOnClickListener(onFloatingClickListenerFavorite);
-        trailerLayout.setOnClickListener(onClickListenerTrailer);
+        mDetailsViewHolder.FLOATING_ACTION_BUTTON.setOnClickListener(onFloatingClickListenerFavorite);
+        mDetailsViewHolder.TRAILER_LAYOUT.setOnClickListener(onClickListenerTrailer);
         /// scrollbar for overview TextView
-        overviewTextView.setMovementMethod(new ScrollingMovementMethod());
-        if(bundle != null ) {
+        mDetailsViewHolder.OVERVIEW_TEXT_VIEW.setMovementMethod(new ScrollingMovementMethod());
+        mDetailsDataSaver = new DataSaver.DetailsActivityData();
+
+        if(savedInstanceState != null){
+            Log.e("save","done");
+            String[] savedData = savedInstanceState.getStringArray(mDetailsDataSaver.DATA_SAVER_ID);
+            Bitmap bitmapImage = Utility.convertByteArrayToBitmap(
+                    savedInstanceState.getByteArray(mDetailsDataSaver.DATA_IMAGE_SAVER_ID));
+
+            assert savedData != null;
+            // store data.
+            mDetailsDataSaver.setMovieData(savedData);
+            mDetailsDataSaver.setImageData(bitmapImage);
+            // set previous data.
+            mDetailsViewHolder.setValues(
+                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_ORIGINAL_TITLE]),
+                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_RELEASE_DATE]),
+                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_OVERVIEW]),
+                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_COUNT]),
+                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_RATE]),
+                    bitmapImage
+            );
+
+        } else if(bundle != null) {
             /// Set UI
             getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, this);
         }
@@ -210,7 +206,7 @@ public class DetailsFragment extends Fragment
 
             AppAnimation.landscapeAnimation(
                     (LinearLayout) rootView.findViewById(R.id.movie_items_list),
-                    floatingActionButtonFavorite,
+                    mDetailsViewHolder.FLOATING_ACTION_BUTTON,
                     (RelativeLayout) rootView.findViewById(R.id.movie_image_component)
                     );
         }
@@ -251,9 +247,10 @@ public class DetailsFragment extends Fragment
 
     @Override
     public void setImageToView(Bitmap imageAsBitmap) {
-        swipeRefreshLayout.setRefreshing(false);
-        backDropImage.setImageBitmap(imageAsBitmap);
-
+        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+        mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setImageBitmap(imageAsBitmap);
+        // store data.
+        mDetailsDataSaver.setImageData(imageAsBitmap);
     }
 
 
@@ -304,38 +301,36 @@ public class DetailsFragment extends Fragment
                 data.getInt(MovieDataBaseControl.getMovieVoteCount(columnsCount));
         final float VOTE_RATING_DATABASE =
                 data.getFloat(MovieDataBaseControl.getMovieVoteRating(columnsCount));
-        final int MOVIE_ID_DATABASE =
-                data.getInt(MovieDataBaseControl.getMovieId(columnsCount));
 
-        originalTextView.setText(ORIGINAL_TITLE_DATABASE);
-
-        movieId = MOVIE_ID_DATABASE;
+        movieId = data.getInt(MovieDataBaseControl.getMovieId(columnsCount));
 
         // image background
         imageURL = BACKDROP_IMAGE_DATABASE;
 
         if(!imageURL.equals("null")) {
-            swipeRefreshLayout.setRefreshing(true);
-            imageDownloadLaunch = new ImageDownloadLaunch(this);
+            mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
+            new ImageDownloadLaunch(this);
         }else{
-            backDropImage.setImageResource(R.drawable.imageisnotvalidbackdrop);
+            mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setImageResource(R.drawable.imageisnotvalidbackdrop);
         }
 
-        overviewTextView.setText(OVERVIEW_DATABASE);
-        dateTextView.setText(RELEASE_DATE_DATABASE);
-        countVoteTextView.setText(
-                String.valueOf(VOTE_COUNT_DATABASE)
+        mDetailsViewHolder.setValues(
+                ORIGINAL_TITLE_DATABASE,
+                RELEASE_DATE_DATABASE,
+                OVERVIEW_DATABASE,
+                String.valueOf(VOTE_COUNT_DATABASE),
+                String.valueOf(VOTE_RATING_DATABASE)
+        );
+        // store data.
+        mDetailsDataSaver.setMovieData(
+                ORIGINAL_TITLE_DATABASE,
+                String.valueOf(movieId),
+                OVERVIEW_DATABASE,
+                RELEASE_DATE_DATABASE,
+                String.valueOf(VOTE_COUNT_DATABASE),
+                String.valueOf(VOTE_RATING_DATABASE)
         );
 
-        ratingBarView.setRating(VOTE_RATING_DATABASE);
-        ratingTextView.setText(String.valueOf(VOTE_RATING_DATABASE));
-
-        AppAnimation.detailMovieAnimation(
-                floatingActionButtonFavorite,
-                dateImageView,
-                ratingImageView,
-                voteImageView
-                );
         setFloatingActionButton();
     }
 
@@ -347,7 +342,7 @@ public class DetailsFragment extends Fragment
     private boolean movieInFavoriteList(){
 
         String selection = MovieContract.FavoriteMovieEntry.ORIGINAL_TITLE_COLUMN + "=?";
-        String[] selectionArgs = {originalTextView.getText().toString()};
+        String[] selectionArgs = {mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.getText().toString()};
 
 
         Cursor cursor = null;
@@ -423,9 +418,9 @@ public class DetailsFragment extends Fragment
     private void setFloatingActionButton(){
 
         if(movieInFavoriteList()) {
-            floatingActionButtonFavorite.setImageResource(R.drawable.ic_star_rate_black_18dp);
+            mDetailsViewHolder.FLOATING_ACTION_BUTTON.setImageResource(R.drawable.ic_star_rate_black_18dp);
         }else{
-            floatingActionButtonFavorite.setImageResource(R.drawable.ic_star_border_white_48dp);
+            mDetailsViewHolder.FLOATING_ACTION_BUTTON.setImageResource(R.drawable.ic_star_border_white_48dp);
         }
     }
 
@@ -459,10 +454,24 @@ public class DetailsFragment extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.e("done", "saved");
+        outState.putStringArray(
+                mDetailsDataSaver.DATA_SAVER_ID,
+                mDetailsDataSaver.getMovieData()
+        );
+        outState.putByteArray(
+                mDetailsDataSaver.DATA_IMAGE_SAVER_ID,
+                mDetailsDataSaver.getImageData()
+        );
+        super.onSaveInstanceState(outState);
+    }
+
     private void setMovieAsFavoriteList(boolean isFavorite){
 
         String selection = MovieContract.MovieMainEntry.FAVORITE_MOVIE_COLUMN +"=?";
-        String[] selectionArgs = {originalTextView.getText().toString()};
+        String[] selectionArgs = {mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.getText().toString()};
 
         ContentValues contentValues = new ContentValues();
         if(isFavorite)
