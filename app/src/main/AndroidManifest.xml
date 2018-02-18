@@ -11,20 +11,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".DetailsActivity">
+        <activity android:name=".Ui.movie_details.DetailsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mohamednagy.myapplication.MainActivity" />
+                android:value="com.example.mohamednagy.myapplication.Ui.movie_main_list.MainActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mohamednagy.myapplication.MainActivity" />
+                android:value="com.example.mohamednagy.myapplication.Ui.movie_main_list.MainActivity" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Ui.movie_main_list.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -39,7 +39,7 @@
             android:authorities="com.example.mohamednagy.myapplication" />
 
         <activity
-            android:name=".Ui.ReviewsActivity"
+            android:name=".Ui.reviews_list.ReviewsActivity"
             android:label="@string/title_activity_reviews"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

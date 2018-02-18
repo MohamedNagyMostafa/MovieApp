@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication;
+package com.example.mohamednagy.myapplication.Ui.movie_details;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -26,8 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
-import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
+import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.FavoriteStarListener;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
+import com.example.mohamednagy.myapplication.Ui.reviews_list.ReviewsActivity;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
@@ -130,12 +132,7 @@ public class DetailsFragment extends Fragment
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final String BASE_URL = "https://www.themoviedb.org/movie/";
-                    final String TRAILER_URL = "/videos";
 
-                    Intent webBrowser = new Intent(Intent.ACTION_VIEW);
-                    webBrowser.setData(Uri.parse(BASE_URL + movieId + TRAILER_URL));
-                    startActivity(webBrowser);
 
                 }
             };
@@ -399,14 +396,7 @@ public class DetailsFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.action_reviews){
-
-            final String BASE_URL = "https://www.themoviedb.org/movie/";
-            final String TRAILER_URL = "/reviews";
-
-            Intent webBrowser = new Intent(Intent.ACTION_VIEW);
-            webBrowser.setData(Uri.parse(BASE_URL + movieId + TRAILER_URL));
-            startActivity(webBrowser);
-
+            openReviewsScreen();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -467,6 +457,11 @@ public class DetailsFragment extends Fragment
                         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
                     }
                 });
+    }
 
+    private void openReviewsScreen(){
+        Intent reviewScreenIntent = new Intent(getActivity(), ReviewsActivity.class);
+        reviewScreenIntent.putExtra(Utility.ExtrasHandler.MOVIE_EXTRA_KEY, movieId);
+        getActivity().startActivity(reviewScreenIntent);
     }
 }

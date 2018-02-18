@@ -1,11 +1,9 @@
-package com.example.mohamednagy.myapplication.Ui;
+package com.example.mohamednagy.myapplication.Ui.reviews_list;
 
-import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper.ReviewsAdapter;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkReviewsCallback;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkMovieLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkReviewLoader;
 import com.example.mohamednagy.myapplication.model.Review;
 

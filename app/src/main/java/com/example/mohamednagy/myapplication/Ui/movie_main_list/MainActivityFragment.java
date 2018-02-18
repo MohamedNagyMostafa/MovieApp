@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication;
+package com.example.mohamednagy.myapplication.Ui.movie_main_list;
 
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
@@ -26,9 +26,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
-import com.example.mohamednagy.myapplication.Ui.FavoriteStarListener;
-import com.example.mohamednagy.myapplication.Ui.MoviesAdapter;
-import com.example.mohamednagy.myapplication.Ui.UriListener;
+import com.example.mohamednagy.myapplication.Ui.movie_details.DetailsFragment;
+import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.FavoriteStarListener;
+import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.MoviesAdapter;
+import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.UriListener;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;

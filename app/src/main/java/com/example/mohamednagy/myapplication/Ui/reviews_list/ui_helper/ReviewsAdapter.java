@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication.Ui;
+package com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

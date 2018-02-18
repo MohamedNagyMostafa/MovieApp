@@ -1,5 +1,8 @@
 package com.example.mohamednagy.myapplication.helperClasses;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -43,9 +46,15 @@ public class Utility {
 
     }
 
-    public static void openLinkOnBrowser(String url){
-
+    public static class Utils{
+        public static void openLinkOnBrowser(String url, Context context){
+            Intent webBrowser = new Intent(Intent.ACTION_VIEW);
+            webBrowser.setData(Uri.parse(url));
+            context.startActivity(webBrowser);
+        }
     }
+
+
     public static class LoaderHandler{
         private static boolean loaderState = false;
 
@@ -57,6 +66,7 @@ public class Utility {
             loaderState = currentLoaderState;
         }
     }
+
     public static class DataTypeHandling{
         public static String optText(String string){
             return (string == null)?"":string;
@@ -97,7 +107,6 @@ public class Utility {
         }
 
     }
-
 
     public static class UrlBuilder{
         private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";

@@ -1,16 +1,9 @@
 package com.example.mohamednagy.myapplication.saver;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Parcelable;
 
-import com.example.mohamednagy.myapplication.DetailsActivity;
-import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 2/16/2018.

@@ -13,7 +13,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
-import com.example.mohamednagy.myapplication.DetailsActivity;
 import com.example.mohamednagy.myapplication.R;
 
 /**

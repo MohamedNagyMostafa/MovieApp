@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication.Ui;
+package com.example.mohamednagy.myapplication.Ui.reviews_list;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

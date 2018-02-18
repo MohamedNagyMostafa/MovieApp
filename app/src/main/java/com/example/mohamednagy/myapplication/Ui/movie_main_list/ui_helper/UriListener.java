@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication.Ui;
+package com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper;
 
 import android.net.Uri;
 

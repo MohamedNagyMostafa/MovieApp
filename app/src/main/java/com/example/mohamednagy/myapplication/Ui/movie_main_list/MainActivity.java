@@ -1,17 +1,20 @@
-package com.example.mohamednagy.myapplication;
+package com.example.mohamednagy.myapplication.Ui.movie_main_list;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.mohamednagy.myapplication.Ui.UriListener;
+import com.example.mohamednagy.myapplication.Ui.movie_details.DetailsActivity;
+import com.example.mohamednagy.myapplication.Ui.movie_details.DetailsFragment;
+import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.SettingsActivity;
+import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.UriListener;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 
 public class MainActivity extends AppCompatActivity

@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication.Ui;
+package com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.R;

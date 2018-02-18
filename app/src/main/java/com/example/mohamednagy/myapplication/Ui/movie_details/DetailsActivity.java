@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication;
+package com.example.mohamednagy.myapplication.Ui.movie_details;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+
+import com.example.mohamednagy.myapplication.R;
 
 /**
  * Created by mohamednagy on 11/10/2016.
