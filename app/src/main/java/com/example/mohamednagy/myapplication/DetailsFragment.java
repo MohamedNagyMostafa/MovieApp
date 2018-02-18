@@ -151,7 +151,7 @@ public class DetailsFragment extends Fragment
         Bundle bundle = getArguments();
 
         if(bundle != null) {
-            uri = Uri.parse(bundle.getString(Utility.URI_EXTRA_KEY));
+            uri = Uri.parse(bundle.getString(Utility.ExtrasHandler.URI_EXTRA_KEY));
             //Log.e("bundle","is not null");
         }
 
@@ -169,7 +169,7 @@ public class DetailsFragment extends Fragment
         if(savedInstanceState != null){
             Log.e("save","done");
             String[] savedData = savedInstanceState.getStringArray(mDetailsDataSaver.DATA_SAVER_ID);
-            Bitmap bitmapImage = Utility.convertByteArrayToBitmap(
+            Bitmap bitmapImage = Utility.DataTypeHandling.convertByteArrayToBitmap(
                     savedInstanceState.getByteArray(mDetailsDataSaver.DATA_IMAGE_SAVER_ID));
 
             assert savedData != null;
@@ -178,11 +178,11 @@ public class DetailsFragment extends Fragment
             mDetailsDataSaver.setImageData(bitmapImage);
             // set previous data.
             mDetailsViewHolder.setValues(
-                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_ORIGINAL_TITLE]),
-                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_RELEASE_DATE]),
-                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_OVERVIEW]),
-                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_COUNT]),
-                    Utility.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_RATE]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_ORIGINAL_TITLE]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_RELEASE_DATE]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_OVERVIEW]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_COUNT]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_RATE]),
                     bitmapImage
             );
 

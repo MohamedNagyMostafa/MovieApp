@@ -13,6 +13,7 @@ import java.util.List;
  */
 
 public class DataNetworkReviewLoader extends DataNetworkLoader<List<Review>> {
+    public static final int REVIEW_LOADER_ID = 2;
     private String mMovieId;
 
     public DataNetworkReviewLoader(Context context, String movieId) {

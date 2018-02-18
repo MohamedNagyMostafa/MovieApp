@@ -1,4 +1,4 @@
-package com.example.mohamednagy.myapplication.loaderTasks;
+package com.example.mohamednagy.myapplication.loaderTasks.loaders;
 
 import android.database.Cursor;
 import android.os.Bundle;

@@ -33,7 +33,7 @@ import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
-import com.example.mohamednagy.myapplication.loaderTasks.CursorUiLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.CursorUiLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkMovieLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderMoviesLaunch;
 import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkMoviesCallback;
@@ -55,7 +55,6 @@ public class MainActivityFragment extends Fragment
     private UriListener uriListener;
     private DataSaver.MainActivityData mainActivitySaver;
 
-    private static final int DATA_NETWORK_LOADER_ID = 1;
     private static final int CURSOR_LOADER_ID = 2;
 
     private ScreenViewHolder.MainViewHolder mainViewHolder;
@@ -74,7 +73,7 @@ public class MainActivityFragment extends Fragment
 
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if(!Utility.getLoaderState()) {
+                    if(!Utility.LoaderHandler.getLoaderState()) {
 
                         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                         currentMovieView = view;
@@ -148,7 +147,7 @@ public class MainActivityFragment extends Fragment
     public void onResume() {
         super.onResume();
         moviesAdapter.notifyDataSetChanged();
-        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.LoaderHandler.getLoaderState());
         updateMoviesGrid();
     }
 
@@ -187,7 +186,7 @@ public class MainActivityFragment extends Fragment
          */
 
             if (databaseHasData()) {
-                    mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
+                    mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.LoaderHandler.getLoaderState());
 
                     if (!isFavoriteSetting()) {
                         Toast.makeText(getActivity(),
@@ -213,13 +212,13 @@ public class MainActivityFragment extends Fragment
      */
     private void startLoadData(){
         // To prevent produce two loaders at the same time
-        if(Utility.getLoaderState())
+        if(Utility.LoaderHandler.getLoaderState())
             return;
 
         if(networkIsConnected()) {
 
-            Utility.setLoaderState(true);
-            mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
+            Utility.LoaderHandler.setLoaderState(true);
+            mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.LoaderHandler.getLoaderState());
 
             NetworkLoaderMoviesLaunch networkLoaderMoviesLaunch =
                     new NetworkLoaderMoviesLaunch(this, isSortChanged());
@@ -285,14 +284,14 @@ public class MainActivityFragment extends Fragment
              * Log.e("restart network","00000000");
              */
 
-            getLoaderManager().restartLoader(DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
+            getLoaderManager().restartLoader(DataNetworkMovieLoader.DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
         }else{
 
             /*
              * Test
              * Log.e("init network","00000000");
              */
-            getLoaderManager().initLoader(DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
+            getLoaderManager().initLoader(DataNetworkMovieLoader.DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
         }
     }
 
@@ -313,7 +312,7 @@ public class MainActivityFragment extends Fragment
          * Test
          * Log.e("finished network","finished 0000000");
          */
-        Utility.setLoaderState(false);
+        Utility.LoaderHandler.setLoaderState(false);
         CursorUiLoader cursorUiLoader = new CursorUiLoader(this,dataChanged);
     }
 
@@ -371,7 +370,7 @@ public class MainActivityFragment extends Fragment
         checkPreviousData();
 
         // Check refresh state for refresh button.
-        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.LoaderHandler.getLoaderState());
         // set current sort.
         sortType = getCurrentSort();
     }
@@ -447,7 +446,7 @@ public class MainActivityFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        getLoaderManager().destroyLoader(DATA_NETWORK_LOADER_ID);
+        getLoaderManager().destroyLoader(DataNetworkMovieLoader.DATA_NETWORK_LOADER_ID);
     }
 
     /**

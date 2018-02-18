@@ -68,7 +68,7 @@ public class DataSaver {
         }
 
         public byte[] getImageData(){
-            return  Utility.converBitmapToByteArray(mImageData);
+            return  Utility.DataTypeHandling.converBitmapToByteArray(mImageData);
         }
     }
 

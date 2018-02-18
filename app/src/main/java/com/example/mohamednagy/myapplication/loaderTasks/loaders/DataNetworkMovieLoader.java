@@ -10,8 +10,8 @@ import com.example.mohamednagy.myapplication.helperClasses.Utility;
  * Created by mohamednagy on 10/8/2016.
  */
 public class DataNetworkMovieLoader extends DataNetworkLoader<Void> {
-
-    private  String sortType ;
+    public static final int DATA_NETWORK_LOADER_ID = 1;
+    private String sortType ;
 
     @Override
     protected void onStartLoading() {
@@ -28,7 +28,7 @@ public class DataNetworkMovieLoader extends DataNetworkLoader<Void> {
     public Void loadInBackground() {
         if(!sortType.equals(getContext().getString(R.string.settings_sort_favorite)))
             DownloadNetworkData.FetchMovieDataFromURL(sortType,getContext());
-        Utility.setLoaderState(false);
+        Utility.LoaderHandler.setLoaderState(false);
         return null;
     }
 

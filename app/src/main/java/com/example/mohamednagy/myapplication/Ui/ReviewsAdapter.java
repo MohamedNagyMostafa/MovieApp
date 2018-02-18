@@ -52,4 +52,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ScreenViewHolder.Review
         return (mReviewsList == null)?0:mReviewsList.size();
     }
 
+    public void swapList(List<Review> reviewList){
+        mReviewsList = reviewList;
+    }
 }

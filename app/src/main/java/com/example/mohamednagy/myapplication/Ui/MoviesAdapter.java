@@ -70,7 +70,7 @@ public class MoviesAdapter extends CursorAdapter {
 
         if(MOVIE_POSTER_IMAGE_DATABASE != null)
             viewHolder.MOVIE_POSTER_IMAGE.setImageBitmap(
-                    Utility.convertByteArrayToBitmap(MOVIE_POSTER_IMAGE_DATABASE)
+                    Utility.DataTypeHandling.convertByteArrayToBitmap(MOVIE_POSTER_IMAGE_DATABASE)
             );
         else{
             viewHolder.MOVIE_POSTER_IMAGE.setImageResource(R.drawable.imageisnotvalid);

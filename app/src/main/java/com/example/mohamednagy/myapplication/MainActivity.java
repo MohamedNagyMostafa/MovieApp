@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity
 
         // Check current device (Tablet - Mobile )
         if(findViewById(R.id.detail_container) != null )
-            Utility.setCurrentPaneUi(Utility.TWO_PANE_UI);
+            Utility.PaneHandler.setCurrentPaneUi(Utility.PaneHandler.TWO_PANE_UI);
         else
-            Utility.setCurrentPaneUi(Utility.ONE_PANE_UI);
+            Utility.PaneHandler.setCurrentPaneUi(Utility.PaneHandler.ONE_PANE_UI);
 
         // Create a Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.settings_action){
-            if(!Utility.getLoaderState()) {
+            if(!Utility.LoaderHandler.getLoaderState()) {
                 Intent settingsActivity =
                         new Intent(this, SettingsActivity.class);
                 startActivity(settingsActivity);
@@ -84,23 +84,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setUri(Uri uri) {
 
-        switch (Utility.getCurrentPaneUi()){
+        switch (Utility.PaneHandler.getCurrentPaneUi()){
 
-            case Utility.ONE_PANE_UI :
+            case Utility.PaneHandler.ONE_PANE_UI :
 
                 Intent detailActivity = new Intent(this,DetailsActivity.class);
-                detailActivity.putExtra(Utility.URI_EXTRA_KEY,uri.toString());
+                detailActivity.putExtra(Utility.ExtrasHandler.URI_EXTRA_KEY,uri.toString());
 
                 startActivity(detailActivity);
 
                 break;
 
-            case Utility.TWO_PANE_UI :
+            case Utility.PaneHandler.TWO_PANE_UI :
 
                 DetailsFragment detailsFragment = new DetailsFragment();
                 Bundle bundle = new Bundle();
 
-                bundle.putString(Utility.URI_EXTRA_KEY,uri.toString());
+                bundle.putString(Utility.ExtrasHandler.URI_EXTRA_KEY,uri.toString());
                 detailsFragment.setArguments(bundle);
 
                 getSupportFragmentManager().beginTransaction()

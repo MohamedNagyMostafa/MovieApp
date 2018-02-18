@@ -1,6 +1,7 @@
 package com.example.mohamednagy.myapplication.Ui;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -14,7 +15,11 @@ import android.view.ViewGroup;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
+import com.example.mohamednagy.myapplication.helperClasses.Utility;
+import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkReviewsCallback;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkMovieLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkReviewLoader;
 import com.example.mohamednagy.myapplication.model.Review;
 
 import java.util.ArrayList;
@@ -23,11 +28,13 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ReviewsActivityFragment extends Fragment {
+public class ReviewsActivityFragment extends Fragment
+    implements NetworkReviewsCallback<List<Review>>{
 
     private ReviewsAdapter reviewsAdapter;
     private List<Review> reviewsList;
     private ScreenViewHolder.ReviewsViewHolder reviewsViewHolder;
+    private String movieId;
 
     public ReviewsActivityFragment() {
     }
@@ -48,38 +55,25 @@ public class ReviewsActivityFragment extends Fragment {
         Bundle bundle = getActivity().getIntent().getExtras();
 
         if(bundle != null){
-
+            movieId = bundle.getString(Utility.ExtrasHandler.MOVIE_EXTRA_KEY);
         }
         return rootView;
     }
 
     @Override
-    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<Void> networkLoader, boolean dataChanged) {
-
+    public void updateUi(List<Review> reviewList) {
+        reviewsAdapter.swapList(reviewList);
+        reviewsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public DataNetworkMovieLoader createNetworkLoader() {
-        return null;
+    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Review>> networkLoader, @Nullable Boolean dataChanged) {
+        getLoaderManager().initLoader(DataNetworkReviewLoader.REVIEW_LOADER_ID, Utility.DataTypeHandling.convertDataToBundle(movieId), networkLoader);
     }
 
     @Override
-    public void connectNetworkLoaderToCursorLoader(boolean dataChanged) {
-
-    }
-
-    @Override
-    public void launchCursorLoader(LoaderManager.LoaderCallbacks<Cursor> cursorLoader, boolean datachanged) {
-
-    }
-
-    @Override
-    public CursorLoader createCursorLoader() {
-        return null;
-    }
-
-    @Override
-    public void updateAdapter(Cursor cursor) {
-
+    public DataNetworkLoader<List<Review>> createNetworkLoader() {
+        return new DataNetworkLoader<>(getContext());
     }
 }
+

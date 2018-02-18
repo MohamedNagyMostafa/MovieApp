@@ -3,6 +3,7 @@ package com.example.mohamednagy.myapplication.helperClasses;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.example.mohamednagy.myapplication.BuildConfig;
@@ -18,66 +19,85 @@ import java.net.URL;
  */
 public class Utility {
 
-    private static boolean loaderState = false;
-
-
-    public static final int ONE_PANE_UI = 100;
-    public static final int TWO_PANE_UI = 101;
-    public static final String URI_EXTRA_KEY = "uri";
-
-    private static int paneUi;
-
-    // Pane state Controller
-    public static void setCurrentPaneUi(int currentPaneUi){
-        paneUi = currentPaneUi;
+    /**
+     * Extras Keys
+     */
+    public static class ExtrasHandler{
+        public static final String URI_EXTRA_KEY = "uri";
+        public static final String MOVIE_EXTRA_KEY = "movie id";
     }
 
-    public static int getCurrentPaneUi(){
-        return paneUi;
-    }
+    public static class PaneHandler{
+        private static int paneUi;
+        public static final int ONE_PANE_UI = 100;
+        public static final int TWO_PANE_UI = 101;
 
-    public static byte[] convertUrlImageToByteArray(String url)throws NullPointerException{
-
-        InputStream inputStream = null;
-        try {
-            inputStream =
-                    UrlBuilder.createUrlImage(url).openStream();
-        }catch (IOException e){
-            Log.e("ee",e.toString());
+        // Pane state Controller
+        public static void setCurrentPaneUi(int currentPaneUi){
+            paneUi = currentPaneUi;
         }
-        Bitmap imageAsBitmap = BitmapFactory.decodeStream(inputStream);
 
+        public static int getCurrentPaneUi(){
+            return paneUi;
+        }
 
-        return converBitmapToByteArray(imageAsBitmap);
-    }
-
-    public static Bitmap convertByteArrayToBitmap(byte[] imageAsBytes){
-        return BitmapFactory.decodeByteArray(imageAsBytes , 0, imageAsBytes.length);
-    }
-
-    public static byte[] converBitmapToByteArray(Bitmap imageAsBitmap){
-        ByteArrayOutputStream byteArrayOutputStream =
-                new ByteArrayOutputStream();
-        imageAsBitmap.compress(Bitmap.CompressFormat.PNG,100,
-                byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    public static boolean getLoaderState(){
-        return loaderState;
-    }
-
-    public static void setLoaderState(boolean currentLoaderState){
-        loaderState = currentLoaderState;
-    }
-
-    public static String optText(String string){
-        return (string == null)?"":string;
     }
 
     public static void openLinkOnBrowser(String url){
 
     }
+    public static class LoaderHandler{
+        private static boolean loaderState = false;
+
+        public static boolean getLoaderState(){
+            return loaderState;
+        }
+
+        public static void setLoaderState(boolean currentLoaderState){
+            loaderState = currentLoaderState;
+        }
+    }
+    public static class DataTypeHandling{
+        public static String optText(String string){
+            return (string == null)?"":string;
+        }
+
+        public static Bitmap convertByteArrayToBitmap(byte[] imageAsBytes){
+            return BitmapFactory.decodeByteArray(imageAsBytes , 0, imageAsBytes.length);
+        }
+
+        public static byte[] converBitmapToByteArray(Bitmap imageAsBitmap){
+            ByteArrayOutputStream byteArrayOutputStream =
+                    new ByteArrayOutputStream();
+            imageAsBitmap.compress(Bitmap.CompressFormat.PNG,100,
+                    byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        }
+
+        public static byte[] convertUrlImageToByteArray(String url)throws NullPointerException{
+
+            InputStream inputStream = null;
+            try {
+                inputStream =
+                        UrlBuilder.createUrlImage(url).openStream();
+            }catch (IOException e){
+                Log.e("ee",e.toString());
+            }
+            Bitmap imageAsBitmap = BitmapFactory.decodeStream(inputStream);
+
+
+            return converBitmapToByteArray(imageAsBitmap);
+        }
+
+        public static Bundle convertDataToBundle(String data){
+            Bundle dataBundle = new Bundle();
+            dataBundle.putString(ExtrasHandler.MOVIE_EXTRA_KEY, data);
+
+            return dataBundle;
+        }
+
+    }
+
 
     public static class UrlBuilder{
         private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
@@ -85,7 +105,7 @@ public class Utility {
         private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500/";
 
         // Build correct url for image path
-        static URL createUrlImage(String imageUrl) {
+        public static URL createUrlImage(String imageUrl) {
             URL url = null;
             try{
                 url = new URL( BASE_URL_IMAGE + imageUrl);

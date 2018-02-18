@@ -54,7 +54,7 @@ public class DownloadNetworkData {
                 String pageJSON = getPageFromStreamAsJSON(inputStream);
 
                 ArrayList<ContentValues> contentValuesArrayList
-                        = ParserJSON.getMovieDataFromJson(pageJSON);
+                        = ParserJSON.MovieListParser.getMovieDataFromJson(pageJSON);
 
                 assert contentValuesArrayList != null;
 
@@ -111,7 +111,7 @@ public class DownloadNetworkData {
                 inputStream = httpURLConnection.getInputStream();
                 String pageJSON = getPageFromStreamAsJSON(inputStream);
 
-                reviewList = ParserJSON.getReviewDataFromJson(pageJSON);
+                reviewList = ParserJSON.ReviewListParser.getReviewDataFromJson(pageJSON);
             } catch (IOException e) {
                 Log.e("Error during Fetching", e.toString());
             } finally {
@@ -154,7 +154,5 @@ public class DownloadNetworkData {
 
         return pageAsJSON;
     }
-
-
 
 }
