@@ -450,7 +450,7 @@ public class DetailsFragment extends Fragment
 
     private void downloadBackDropImage(String imageURL){
         Picasso.with(getContext())
-                .load(Utility.createUrlImage(imageURL).toString())
+                .load(Utility.UrlBuilder.createUrlImage(imageURL).toString())
                 .into(mDetailsViewHolder.BACKDROP_IMAGE_VIEW, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {

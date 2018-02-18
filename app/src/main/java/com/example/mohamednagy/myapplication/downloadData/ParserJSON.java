@@ -5,12 +5,14 @@ import android.util.Log;
 
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
+import com.example.mohamednagy.myapplication.model.Review;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 2/17/2018.
@@ -29,7 +31,7 @@ public class ParserJSON {
 
     private static final String NULL = "null";
 
-    public static ArrayList<ContentValues> getDataFromJson
+    public static ArrayList<ContentValues> getMovieDataFromJson
             (String pageJSON){
         String posterImagePath, backdropImagePath, originalTitle, overView, releasedDate;
         float voteAverage;
@@ -93,5 +95,9 @@ public class ParserJSON {
             Log.e("ead",e.toString());
         }
         return null;
+    }
+
+    public static List<Review> getReviewDataFromJson(String pageJSON){
+                return null;
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.mohamednagy.myapplication.BuildConfig;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
+import com.example.mohamednagy.myapplication.model.Review;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mohamednagy on 10/8/2016.
@@ -28,14 +30,13 @@ import java.util.ArrayList;
  */
 public class DownloadNetworkData {
 
-    public static void FetchDataFromURL(String sortType,
-                                 String baseURL, Context context) {
+    public static void FetchMovieDataFromURL(String sortType, Context context) {
         URL url = null;
 
         if (sortType != null) {
 
             try {
-                url = createUrl(sortType, baseURL);
+                url = Utility.UrlBuilder.createMoviesUrl(sortType);
                 Log.e("url",url.toString());
             } catch (MalformedURLException e) {
                 Log.e("URL create Error", e.toString());
@@ -53,7 +54,7 @@ public class DownloadNetworkData {
                 String pageJSON = getPageFromStreamAsJSON(inputStream);
 
                 ArrayList<ContentValues> contentValuesArrayList
-                        = ParserJSON.getDataFromJson(pageJSON);
+                        = ParserJSON.getMovieDataFromJson(pageJSON);
 
                 assert contentValuesArrayList != null;
 
@@ -86,19 +87,47 @@ public class DownloadNetworkData {
         }
     }
 
-    private static URL createUrl(String sortType,String baseURL)
-            throws MalformedURLException{
+    public static List<Review> FetchReviewDataFromURL(String movieId, Context context) {
+        URL url = null;
+        List<Review> reviewList = new ArrayList<>();
 
-        final String API_KEY = "api_key";
-        // More secure.
-        final String Key_PARAM = BuildConfig.MOVIE_API;
+        if (movieId != null) {
 
-        Uri UriBuilder = Uri.parse(baseURL).buildUpon()
-                .appendPath(sortType)
-                .appendQueryParameter(API_KEY,Key_PARAM)
-                .build();
+            try {
+                url = Utility.UrlBuilder.createReviewsUrl(movieId);
+                Log.e("url", url.toString());
+            } catch (MalformedURLException e) {
+                Log.e("URL create Error", e.toString());
+            }
 
-        return new URL(UriBuilder.toString());
+            HttpURLConnection httpURLConnection = null;
+            InputStream inputStream = null;
+            try {
+                assert url != null;
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.connect();
+
+                inputStream = httpURLConnection.getInputStream();
+                String pageJSON = getPageFromStreamAsJSON(inputStream);
+
+                reviewList = ParserJSON.getReviewDataFromJson(pageJSON);
+            } catch (IOException e) {
+                Log.e("Error during Fetching", e.toString());
+            } finally {
+                if (httpURLConnection != null)
+                    httpURLConnection.disconnect();
+
+                if (inputStream != null)
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        Log.e("inputStream close", e.toString());
+                    }
+            }
+        }
+
+        return reviewList;
     }
 
     private static String getPageFromStreamAsJSON

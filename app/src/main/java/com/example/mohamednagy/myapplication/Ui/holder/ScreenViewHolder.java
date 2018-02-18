@@ -3,7 +3,9 @@ package com.example.mohamednagy.myapplication.Ui.holder;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -122,6 +124,28 @@ public class ScreenViewHolder {
                         view.findViewById(R.id.line_view);
                 MOVIE_FAVORITE_IMAGE =(ImageView)
                         view.findViewById(R.id.movie_favorite_image);
+            }
+        }
+    }
+
+    public static class ReviewsViewHolder{
+
+        public RecyclerView REVIEW_RECYCLE_VIEW;
+
+        public ReviewsViewHolder(View reviewsView){
+            REVIEW_RECYCLE_VIEW = reviewsView.findViewById(R.id.recycle_view);
+        }
+
+        public static class AdapterViewHolder extends RecyclerView.ViewHolder{
+            public final TextView USER_NAME_TEXT_VIEW;
+            public final TextView USER_REVIEW_TEXT_VIEW;
+            public final Button MORE_BUTTON;
+
+            public AdapterViewHolder(View adapterView) {
+                super(adapterView);
+                USER_NAME_TEXT_VIEW = adapterView.findViewById(R.id.user_name_text_view);
+                USER_REVIEW_TEXT_VIEW = adapterView.findViewById(R.id.user_comment_text_view);
+                MORE_BUTTON = adapterView.findViewById(R.id.more_button);
             }
         }
     }

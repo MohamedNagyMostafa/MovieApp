@@ -1,6 +1,6 @@
 package com.example.mohamednagy.myapplication;
 
-import android.Manifest;
+import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,14 +9,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -37,9 +34,9 @@ import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.loaderTasks.CursorUiLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.DataNetworkLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.Loaders;
-import com.example.mohamednagy.myapplication.loaderTasks.NetworkLoaderLaunch;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkMovieLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderMoviesLaunch;
+import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkMoviesCallback;
 import com.example.mohamednagy.myapplication.permission.PermissionHandle;
 import com.example.mohamednagy.myapplication.saver.DataSaver;
 
@@ -49,7 +46,7 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment
-    implements Loaders, FavoriteStarListener{
+    implements FavoriteStarListener, NetworkMoviesCallback<Void>{
 
     private MoviesAdapter moviesAdapter;
     private String sortType;
@@ -224,8 +221,8 @@ public class MainActivityFragment extends Fragment
             Utility.setLoaderState(true);
             mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.getLoaderState());
 
-            NetworkLoaderLaunch networkLoaderLaunch =
-                    new NetworkLoaderLaunch(this, isSortChanged());
+            NetworkLoaderMoviesLaunch networkLoaderMoviesLaunch =
+                    new NetworkLoaderMoviesLaunch(this, isSortChanged());
         }else{
 
             Toast.makeText(getActivity(),
@@ -278,8 +275,9 @@ public class MainActivityFragment extends Fragment
      * @param dataChanged result of check if sort of  movies list state
      *                    is changed or not
      */
+
     @Override
-    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<Void> networkLoader,boolean dataChanged) {
+    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<Void> loaderCallbacks, @Nullable Boolean dataChanged) {
         if(dataChanged){
 
             /*
@@ -287,25 +285,25 @@ public class MainActivityFragment extends Fragment
              * Log.e("restart network","00000000");
              */
 
-            getLoaderManager().restartLoader(DATA_NETWORK_LOADER_ID,null,networkLoader);
+            getLoaderManager().restartLoader(DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
         }else{
 
             /*
              * Test
              * Log.e("init network","00000000");
              */
-            getLoaderManager().initLoader(DATA_NETWORK_LOADER_ID,null,networkLoader);
+            getLoaderManager().initLoader(DATA_NETWORK_LOADER_ID,null,loaderCallbacks);
         }
     }
 
     @Override
-    public DataNetworkLoader createNetworkLoader() {
+    public DataNetworkMovieLoader createNetworkLoader() {
 
         /*
          * Test
          * Log.e("detail","asyncLoader for network is created");
          */
-        return new DataNetworkLoader(getContext(),getCurrentSort());
+        return new DataNetworkMovieLoader(getContext(),getCurrentSort());
     }
 
     @Override
@@ -320,12 +318,12 @@ public class MainActivityFragment extends Fragment
     }
 
     @Override
-    public void launchCursorLoader(LoaderManager.LoaderCallbacks<Cursor> cursorLoader, boolean dataChanged) {
+    public void launchCursorLoader(android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> cursorLoader, boolean datachanged) {
 
-        if(dataChanged)
-            getLoaderManager().restartLoader(CURSOR_LOADER_ID,null,cursorLoader);
+        if (datachanged)
+            getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, cursorLoader);
         else
-            getLoaderManager().initLoader(CURSOR_LOADER_ID,null,cursorLoader);
+            getLoaderManager().initLoader(CURSOR_LOADER_ID, null, cursorLoader);
 
     }
 

@@ -5,14 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkMoviesCallback;
+
 /**
  * Created by mohamednagy on 11/8/2016.
  */
 public class CursorUiLoader implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private Loaders loaders;
+    private NetworkMoviesCallback loaders;
 
-    public CursorUiLoader(Loaders loaders,boolean dataChanged){
+    public CursorUiLoader(NetworkMoviesCallback loaders,boolean dataChanged){
         this.loaders = loaders;
         loaders.launchCursorLoader(this,dataChanged);
     }
