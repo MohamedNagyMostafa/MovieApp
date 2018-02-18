@@ -41,7 +41,8 @@
         <activity
             android:name=".Ui.reviews_list.ReviewsActivity"
             android:label="@string/title_activity_reviews"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Ui.movie_details.DetailsActivity"/>
     </application>
 
 </manifest>

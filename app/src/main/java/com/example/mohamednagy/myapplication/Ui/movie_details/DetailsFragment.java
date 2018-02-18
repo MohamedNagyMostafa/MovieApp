@@ -41,7 +41,7 @@ public class DetailsFragment extends Fragment
 
     private String imageURL;
     private Uri uri ;
-    private int movieId;
+    private Integer movieId;
 
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
@@ -153,7 +153,7 @@ public class DetailsFragment extends Fragment
         }
 
        
-        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setColorSchemeResources(R.color.detailTextView);
+        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setColorSchemeResources(R.color.colorPrimaryDark);
         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
         /// set click listeners
@@ -461,7 +461,7 @@ public class DetailsFragment extends Fragment
 
     private void openReviewsScreen(){
         Intent reviewScreenIntent = new Intent(getActivity(), ReviewsActivity.class);
-        reviewScreenIntent.putExtra(Utility.ExtrasHandler.MOVIE_EXTRA_KEY, movieId);
+        reviewScreenIntent.putExtra(Utility.ExtrasHandler.MOVIE_EXTRA_KEY,  String.valueOf(movieId));
         getActivity().startActivity(reviewScreenIntent);
     }
 }

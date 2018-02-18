@@ -22,8 +22,4 @@ public class PermissionHandle {
                 == PackageManager.PERMISSION_GRANTED);
     }
 
-    public static void askPermission(Context context, String... permissions){
-        ActivityCompat.requestPermissions((Activity) context, permissions, REQUEST_CODE);
-    }
-
 }

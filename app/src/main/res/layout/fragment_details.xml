@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:alpha="0.5"
         android:layout_centerInParent="true"
-        android:background="@color/lineView" />
+        android:background="@color/colorAccent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                             android:gravity="top"
                             android:textSize="12sp"
                             android:alpha="0.7"
-                            android:textColor="@color/detailTextView"
+                            android:textColor="@color/colorPrimaryDark"
                             android:fontFamily="sans-serif-condensed"
                             android:layout_width="match_parent"
                             android:layout_height="32dp"
@@ -174,7 +174,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:alpha="0.2"
-                            android:background="@color/lineView" />
+                            android:background="@color/colorAccent" />
 
                         <TextView
                             android:id="@+id/vote_count_textView"
@@ -189,7 +189,7 @@
                             android:gravity="top"
                             android:textSize="12sp"
                             android:alpha="0.7"
-                            android:textColor="@color/detailTextView"
+                            android:textColor="@color/colorPrimaryDark"
                             android:fontFamily="sans-serif-condensed"
                             android:layout_width="match_parent"
                             android:layout_height="32dp"/>
@@ -198,7 +198,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:alpha="0.2"
-                            android:background="@color/lineView" />
+                            android:background="@color/colorAccent" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -227,7 +227,7 @@
                                 android:gravity="top"
                                 android:textSize="12sp"
                                 android:alpha="0.7"
-                                android:textColor="@color/detailTextView"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:fontFamily="sans-serif-condensed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
@@ -239,7 +239,7 @@
                                 android:gravity="top"
                                 android:textSize="12sp"
                                 android:alpha="0.7"
-                                android:textColor="@color/detailTextView"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:layout_marginStart="1dp"
                                 android:fontFamily="sans-serif-condensed"/>
 

@@ -134,7 +134,7 @@ public class MainActivityFragment extends Fragment
         mainViewHolder.MOVIES_GRID_VIEW.setOnItemClickListener(onItemClickListener);
         mainViewHolder.MOVIES_GRID_VIEW.setAdapter(moviesAdapter);
 
-        mainViewHolder.SWIPE_REFRESH_LAYOUT.setColorSchemeResources(R.color.detailTextView);
+        mainViewHolder.SWIPE_REFRESH_LAYOUT.setColorSchemeResources(R.color.colorPrimaryDark);
         mainViewHolder.SWIPE_REFRESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
         if(savedInstanceState != null){
@@ -202,8 +202,11 @@ public class MainActivityFragment extends Fragment
                      */
                     CursorUiLoader cursorUiLoader = new CursorUiLoader(this, isSortChanged());
             }else{
+                Log.e("pass1","accept");
                 if(permissionInvestigation())
                     startLoadData();
+                Log.e("pass3","accept");
+
             }
     }
 
@@ -213,6 +216,7 @@ public class MainActivityFragment extends Fragment
      * Otherwise display message for user to check his network connection .
      */
     private void startLoadData(){
+        Log.e("pass2", "accpet");
         // To prevent produce two loaders at the same time
         if(Utility.LoaderHandler.getLoaderState())
             return;
@@ -467,11 +471,23 @@ public class MainActivityFragment extends Fragment
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.e("request","reuqests");
+
         switch (requestCode){
             case PermissionHandle.REQUEST_CODE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    startLoadData();
+                Log.e("enter","reuqests");
+                if(grantResults.length > 0){
+                    Log.e("find permission","reuqests");
+                    boolean result = true;
+                    for (int grantResult : grantResults) {
+                        result = grantResult == PackageManager.PERMISSION_GRANTED && result;
+                    }
+                    if(result)
+                        startLoadData();
+                    else
+                        Log.e("eeror","reject");;
                 }else{
+                    Log.e("eeror","reject");
                     //TODO add snackbar.
                 }
         }
@@ -486,17 +502,22 @@ public class MainActivityFragment extends Fragment
         ArrayList<String> requiredPermissions = new ArrayList<>();
 
         if(PermissionHandle.checkPermission(PermissionHandle.ACCESS_NETWORK_STATE_PERMISSION, getContext())){
+            Log.e("permisson1","faild");
             result = false;
             requiredPermissions.add(PermissionHandle.ACCESS_NETWORK_STATE_PERMISSION);
         }
 
         if(PermissionHandle.checkPermission(PermissionHandle.ACCESS_INTERNET_PERMISSION, getContext())){
+            Log.e("permisson2","faild");
+
             result = false;
             requiredPermissions.add(PermissionHandle.ACCESS_INTERNET_PERMISSION);
         }
 
         if(requiredPermissions.size() > 0){
-            PermissionHandle.askPermission(getContext(), requiredPermissions.toArray(new String[requiredPermissions.size()]));
+            Log.e("enrer to re","er");
+            requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]),
+                    PermissionHandle.REQUEST_CODE);
         }
 
         return result;
@@ -507,6 +528,7 @@ public class MainActivityFragment extends Fragment
         outState.putParcelable(DataSaver.MainActivityData.GRID_VIEW_STATE_ID,
                 mainViewHolder.MOVIES_GRID_VIEW.onSaveInstanceState());
         super.onSaveInstanceState(outState);
-
     }
+
+
 }

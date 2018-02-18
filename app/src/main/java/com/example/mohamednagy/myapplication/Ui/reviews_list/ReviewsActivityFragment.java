@@ -7,9 +7,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper.ReviewsAdapter;
@@ -18,6 +20,7 @@ import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkReviewsCallback;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkReviewLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderReviewsLaunch;
 import com.example.mohamednagy.myapplication.model.Review;
 
 import java.util.ArrayList;
@@ -51,11 +54,18 @@ public class ReviewsActivityFragment extends Fragment
         reviewsViewHolder.REVIEW_RECYCLE_VIEW.setAdapter(reviewsAdapter);
 
         Bundle bundle = getActivity().getIntent().getExtras();
-
         if(bundle != null){
             movieId = bundle.getString(Utility.ExtrasHandler.MOVIE_EXTRA_KEY);
+            Log.e("movie","id " + movieId);
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        NetworkLoaderReviewsLaunch networkLoaderReviewsLaunch =
+                new NetworkLoaderReviewsLaunch(this);
     }
 
     @Override
@@ -66,12 +76,13 @@ public class ReviewsActivityFragment extends Fragment
 
     @Override
     public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Review>> networkLoader, @Nullable Boolean dataChanged) {
-        getLoaderManager().initLoader(DataNetworkReviewLoader.REVIEW_LOADER_ID, Utility.DataTypeHandling.convertDataToBundle(movieId), networkLoader);
+        Log.e("start","done");
+        getLoaderManager().initLoader(DataNetworkReviewLoader.REVIEW_LOADER_ID, null, networkLoader);
     }
 
     @Override
     public DataNetworkLoader<List<Review>> createNetworkLoader() {
-        return new DataNetworkLoader<>(getContext());
+        return new DataNetworkReviewLoader(getContext(), movieId);
     }
 }
 

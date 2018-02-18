@@ -2,6 +2,7 @@ package com.example.mohamednagy.myapplication.loaderTasks.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.mohamednagy.myapplication.downloadData.DownloadNetworkData;
 import com.example.mohamednagy.myapplication.model.Review;
@@ -29,6 +30,7 @@ public class DataNetworkReviewLoader extends DataNetworkLoader<List<Review>> {
 
     @Override
     public List<Review> loadInBackground() {
+        Log.e("enter load","done");
         return DownloadNetworkData.FetchReviewDataFromURL(mMovieId,getContext());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,15 +35,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ScreenViewHolder.Review
     }
 
     @Override
-    public void onBindViewHolder(ScreenViewHolder.ReviewsViewHolder.AdapterViewHolder holder, int position) {
-        Review userReview = mReviewsList.get(position);
+    public void onBindViewHolder(final ScreenViewHolder.ReviewsViewHolder.AdapterViewHolder holder, int position) {
+        final Review userReview = mReviewsList.get(position);
 
         holder.USER_NAME_TEXT_VIEW.setText(userReview.getUserName());
         holder.USER_REVIEW_TEXT_VIEW.setText(userReview.getReview());
         holder.MORE_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utility.openLinkOnBrowser(null);
+                Utility.Utils.openLinkOnBrowser(userReview.getReviewUrl(), holder.MORE_BUTTON.getContext());
             }
         });
     }
