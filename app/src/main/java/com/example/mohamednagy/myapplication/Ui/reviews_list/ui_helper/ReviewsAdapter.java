@@ -39,13 +39,18 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ScreenViewHolder.Review
         final Review userReview = mReviewsList.get(position);
 
         holder.USER_NAME_TEXT_VIEW.setText(userReview.getUserName());
-        holder.USER_REVIEW_TEXT_VIEW.setText(userReview.getReview());
-        holder.MORE_BUTTON.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utility.Utils.openLinkOnBrowser(userReview.getReviewUrl(), holder.MORE_BUTTON.getContext());
-            }
-        });
+        holder.USER_REVIEW_TEXT_VIEW.setText(Utility.Utils.checkAndGetLimitation(userReview.getReview()));
+
+        if(userReview.getReview().length() > Utility.Utils.REVIEW_CHARACTERS_LIMITATION) {
+            holder.MORE_BUTTON.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.Utils.openLinkOnBrowser(userReview.getReviewUrl(), holder.MORE_BUTTON.getContext());
+                }
+            });
+            holder.MORE_BUTTON.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

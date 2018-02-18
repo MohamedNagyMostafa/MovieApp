@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.mohamednagy.myapplication.R;
 
@@ -49,6 +50,17 @@ public class DetailsActivity extends AppCompatActivity {
         }catch (NullPointerException e){
             Log.e("error",e.toString());
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return false;
     }
 
 }

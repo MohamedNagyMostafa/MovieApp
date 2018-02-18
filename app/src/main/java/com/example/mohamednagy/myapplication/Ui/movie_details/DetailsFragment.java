@@ -396,7 +396,11 @@ public class DetailsFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.action_reviews){
-            openReviewsScreen();
+            if(!mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.isRefreshing())
+                openReviewsScreen();
+            else
+                Toast.makeText(getContext(),"Please wait until image loading be completed", Toast.LENGTH_LONG).show();
+            
             return true;
         }
         return super.onOptionsItemSelected(item);

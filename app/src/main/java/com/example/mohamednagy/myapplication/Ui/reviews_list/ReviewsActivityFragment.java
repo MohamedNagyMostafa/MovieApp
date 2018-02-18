@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,9 +34,9 @@ public class ReviewsActivityFragment extends Fragment
     implements NetworkReviewsCallback<List<Review>>{
 
     private ReviewsAdapter reviewsAdapter;
-    private List<Review> reviewsList;
-    private ScreenViewHolder.ReviewsViewHolder reviewsViewHolder;
     private String movieId;
+    private NetworkLoaderReviewsLaunch networkLoaderReviewsLaunch;
+    private ScreenViewHolder.ReviewsViewHolder reviewsViewHolder;
 
     public ReviewsActivityFragment() {
     }
@@ -45,7 +46,7 @@ public class ReviewsActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_reviews, container, false);
         reviewsViewHolder = new ScreenViewHolder.ReviewsViewHolder(rootView);
-        reviewsList = new ArrayList<>();
+        List<Review> reviewsList = new ArrayList<>();
         reviewsAdapter = new ReviewsAdapter(reviewsList);
         // Recycle Settings.
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -53,10 +54,17 @@ public class ReviewsActivityFragment extends Fragment
         reviewsViewHolder.REVIEW_RECYCLE_VIEW.setItemAnimator(new DefaultItemAnimator());
         reviewsViewHolder.REVIEW_RECYCLE_VIEW.setAdapter(reviewsAdapter);
 
+        reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(true);
+                networkLoaderReviewsLaunch.execute();
+            }
+        });
+
         Bundle bundle = getActivity().getIntent().getExtras();
         if(bundle != null){
             movieId = bundle.getString(Utility.ExtrasHandler.MOVIE_EXTRA_KEY);
-            Log.e("movie","id " + movieId);
         }
         return rootView;
     }
@@ -64,19 +72,20 @@ public class ReviewsActivityFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        NetworkLoaderReviewsLaunch networkLoaderReviewsLaunch =
+        networkLoaderReviewsLaunch =
                 new NetworkLoaderReviewsLaunch(this);
+        networkLoaderReviewsLaunch.execute();
     }
 
     @Override
     public void updateUi(List<Review> reviewList) {
+        reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(false);
         reviewsAdapter.swapList(reviewList);
         reviewsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Review>> networkLoader, @Nullable Boolean dataChanged) {
-        Log.e("start","done");
         getLoaderManager().initLoader(DataNetworkReviewLoader.REVIEW_LOADER_ID, null, networkLoader);
     }
 

@@ -47,12 +47,22 @@ public class Utility {
     }
 
     public static class Utils{
+        public static final int REVIEW_CHARACTERS_LIMITATION = 300;
+        private static final String MORE_CHARS = "...";
         public static void openLinkOnBrowser(String url, Context context){
             Intent webBrowser = new Intent(Intent.ACTION_VIEW);
             webBrowser.setData(Uri.parse(url));
             context.startActivity(webBrowser);
         }
+
+        public static String checkAndGetLimitation(String text){
+            if(text.length() > REVIEW_CHARACTERS_LIMITATION){
+                return text.substring(0, REVIEW_CHARACTERS_LIMITATION) + MORE_CHARS;
+            }
+            return text;
+        }
     }
+
 
 
     public static class LoaderHandler{

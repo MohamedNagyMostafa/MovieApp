@@ -6,7 +6,6 @@
     android:layout_marginTop="12dp"
     android:layout_marginBottom="12dp"
     android:layout_gravity="center_horizontal"
-    android:background="@color/colorPrimaryDark"
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
@@ -58,6 +57,7 @@
                 android:layout_gravity="end"
                 android:background="@drawable/touch_selector"
                 android:textColor="@color/colorAccent"
+                android:visibility="invisible"
                 android:text="MORE"/>
 
             <View

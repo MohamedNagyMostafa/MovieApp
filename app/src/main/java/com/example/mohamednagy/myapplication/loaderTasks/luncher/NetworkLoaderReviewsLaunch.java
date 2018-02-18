@@ -19,6 +19,9 @@ public class NetworkLoaderReviewsLaunch implements LoaderManager.LoaderCallbacks
 
     public NetworkLoaderReviewsLaunch(NetworkReviewsCallback<List<Review>> networkReviewsCallback){
         mNetworkReviewsCallback =  networkReviewsCallback;
+    }
+
+    public void execute(){
         mNetworkReviewsCallback.launchNetworkLoader(this,null);
     }
 
