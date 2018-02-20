@@ -8,20 +8,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper.ReviewsAdapter;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
-import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkReviewsCallback;
+import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkModelsListCallback;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkReviewLoader;
-import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderReviewsLaunch;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkModelListLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderModelListLaunch;
 import com.example.mohamednagy.myapplication.model.Review;
 
 import java.util.ArrayList;
@@ -31,11 +29,11 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ReviewsActivityFragment extends Fragment
-    implements NetworkReviewsCallback<List<Review>>{
+    implements NetworkModelsListCallback<List<Review>> {
 
     private ReviewsAdapter reviewsAdapter;
     private String movieId;
-    private NetworkLoaderReviewsLaunch networkLoaderReviewsLaunch;
+    private NetworkLoaderModelListLaunch<Review> networkLoaderModelListLaunch;
     private ScreenViewHolder.ReviewsViewHolder reviewsViewHolder;
 
     public ReviewsActivityFragment() {
@@ -58,7 +56,7 @@ public class ReviewsActivityFragment extends Fragment
             @Override
             public void onRefresh() {
                 reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(true);
-                networkLoaderReviewsLaunch.execute();
+                networkLoaderModelListLaunch.execute();
             }
         });
 
@@ -72,9 +70,9 @@ public class ReviewsActivityFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        networkLoaderReviewsLaunch =
-                new NetworkLoaderReviewsLaunch(this);
-        networkLoaderReviewsLaunch.execute();
+        networkLoaderModelListLaunch =
+                new NetworkLoaderModelListLaunch<Review>(this);
+        networkLoaderModelListLaunch.execute();
     }
 
     @Override
@@ -86,12 +84,12 @@ public class ReviewsActivityFragment extends Fragment
 
     @Override
     public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Review>> networkLoader, @Nullable Boolean dataChanged) {
-        getLoaderManager().initLoader(DataNetworkReviewLoader.REVIEW_LOADER_ID, null, networkLoader);
+        getLoaderManager().initLoader(DataNetworkModelListLoader.REVIEW_LOADER_ID, null, networkLoader);
     }
 
     @Override
     public DataNetworkLoader<List<Review>> createNetworkLoader() {
-        return new DataNetworkReviewLoader(getContext(), movieId);
+        return new DataNetworkModelListLoader<>(getActivity(), movieId);
     }
 }
 

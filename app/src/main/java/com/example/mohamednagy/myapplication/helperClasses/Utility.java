@@ -63,8 +63,6 @@ public class Utility {
         }
     }
 
-
-
     public static class LoaderHandler{
         private static boolean loaderState = false;
 
@@ -120,8 +118,12 @@ public class Utility {
 
     public static class UrlBuilder{
         private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
-        private static final String REVIEW_PATH = "reviews";
         private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500/";
+
+        private static final String REVIEW_PATH = "reviews";
+        private static final String TRAILER_PATH = "videos";
+
+        private static final String YOUTUBE_URL = "https://www.youtube.com/watch?";
 
         // Build correct url for image path
         public static URL createUrlImage(String imageUrl) {
@@ -164,5 +166,28 @@ public class Utility {
             return new URL(UriBuilder.toString());
         }
 
+        public static URL createYoutubeVideo(String videoKey) throws MalformedURLException{
+            final String VIDEO_PARAM = "v";
+
+            Uri UriBuilder = Uri.parse(YOUTUBE_URL).buildUpon()
+                    .appendQueryParameter(VIDEO_PARAM, videoKey)
+                    .build();
+
+            return new URL(UriBuilder.toString());
+        }
+
+        public static URL createTrailersUrl(String movieId) throws MalformedURLException {
+            final String API_KEY = "api_key";
+            // More secure.
+            final String Key_PARAM = BuildConfig.MOVIE_API;
+
+            Uri UriBuilder = Uri.parse(BASE_URL).buildUpon()
+                    .appendPath(movieId)
+                    .appendPath(TRAILER_PATH)
+                    .appendQueryParameter(API_KEY,Key_PARAM)
+                    .build();
+
+            return new URL(UriBuilder.toString());
+        }
     }
 }

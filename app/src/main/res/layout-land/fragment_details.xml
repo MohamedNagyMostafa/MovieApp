@@ -26,13 +26,25 @@
                 android:layout_height="match_parent"
                 android:rotation="-90">
 
-                <ImageView
-                    android:id="@+id/backdrop_imageView"
-                    android:contentDescription="@string/description_image"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="1"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="match_parent">
+
+                    <FrameLayout
+                        android:id="@+id/movie_trailer_video_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:id="@+id/backdrop_imageView"
+                        android:contentDescription="@string/description_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="1"
+                        android:scaleType="centerCrop"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/movie_trailer"
@@ -263,6 +275,11 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/movie_trailer_recycle_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="140dp"/>
 
             </LinearLayout>
 

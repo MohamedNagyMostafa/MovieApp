@@ -18,6 +18,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', "MOVIE_API", MovieApiToken
+        it.buildConfigField 'String', "GOOGLE_API_KEY", GoogleApiKey
     }
     productFlavors {
     }

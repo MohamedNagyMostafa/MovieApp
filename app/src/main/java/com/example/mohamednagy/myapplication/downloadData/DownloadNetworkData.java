@@ -9,6 +9,7 @@ import com.example.mohamednagy.myapplication.BuildConfig;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.model.Review;
+import com.example.mohamednagy.myapplication.model.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,7 +88,7 @@ public class DownloadNetworkData {
         }
     }
 
-    public static List<Review> FetchReviewDataFromURL(String movieId, Context context) {
+    public static List<Review> FetchReviewDataFromURL(String movieId) {
         URL url = null;
         List<Review> reviewList = new ArrayList<>();
 
@@ -112,6 +113,50 @@ public class DownloadNetworkData {
                 String pageJSON = getPageFromStreamAsJSON(inputStream);
 
                 reviewList = ParserJSON.ReviewListParser.getReviewDataFromJson(pageJSON);
+            } catch (IOException e) {
+                Log.e("Error during Fetching", e.toString());
+            } finally {
+                if (httpURLConnection != null)
+                    httpURLConnection.disconnect();
+
+                if (inputStream != null)
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        Log.e("inputStream close", e.toString());
+                    }
+            }
+        }
+
+        return reviewList;
+    }
+
+    public static List<Trailer> FetchTrailerDataFromURL(String movieId) {
+        Log.e("trailer","movie id :" + movieId);
+        URL url = null;
+        List<Trailer> reviewList = new ArrayList<>();
+
+        if (movieId != null) {
+
+            try {
+                url = Utility.UrlBuilder.createTrailersUrl(movieId);
+                Log.e("url", url.toString());
+            } catch (MalformedURLException e) {
+                Log.e("URL create Error", e.toString());
+            }
+
+            HttpURLConnection httpURLConnection = null;
+            InputStream inputStream = null;
+            try {
+                assert url != null;
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.connect();
+
+                inputStream = httpURLConnection.getInputStream();
+                String pageJSON = getPageFromStreamAsJSON(inputStream);
+
+                reviewList = ParserJSON.ReviewListParser.getTrailerDataFromJson(pageJSON);
             } catch (IOException e) {
                 Log.e("Error during Fetching", e.toString());
             } finally {

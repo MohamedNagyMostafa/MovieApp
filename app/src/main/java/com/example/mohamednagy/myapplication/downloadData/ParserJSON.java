@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
 import com.example.mohamednagy.myapplication.model.Review;
+import com.example.mohamednagy.myapplication.model.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -104,9 +105,15 @@ public class ParserJSON {
 
     public static class ReviewListParser{
         private static final String RESULTS_NODE = "results";
-        private static final String AUTHOR_NODE = "author";
-        private static final String CONTENT_NODE ="content";
-        private static final String URL_NODE = "url";
+
+        private static final String REVIEW_AUTHOR_NODE = "author";
+        private static final String REVIEW_CONTENT_NODE ="content";
+        private static final String REVIEW_URL_NODE = "url";
+
+        private static final String TRAILER_NAME_NODE = "name";
+        private static final String TRAILER_KEY_NODE = "key";
+        private static final String TRAILER_TYPE_NODE = "type";
+
         private static final String NULL = "";
 
         public static List<Review> getReviewDataFromJson(String jsonPage){
@@ -117,7 +124,7 @@ public class ParserJSON {
                 JSONArray resultJsonArray = (reviewJsonObject.has(RESULTS_NODE))?
                         reviewJsonObject.getJSONArray(RESULTS_NODE): null;
                 assert resultJsonArray != null;
-                reviewList = parseResults(resultJsonArray);
+                reviewList = parseReviewResults(resultJsonArray);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -127,15 +134,33 @@ public class ParserJSON {
 
         }
 
-        private static List<Review> parseResults(JSONArray jsonArray) throws JSONException {
+        public static List<Trailer> getTrailerDataFromJson(String jsonPage){
+            assert jsonPage != null;
+            List<Trailer> reviewList = new ArrayList<>();
+            try {
+                JSONObject reviewJsonObject = new JSONObject(jsonPage);
+                JSONArray resultJsonArray = (reviewJsonObject.has(RESULTS_NODE))?
+                        reviewJsonObject.getJSONArray(RESULTS_NODE): null;
+                assert resultJsonArray != null;
+                reviewList = parseTrailerResults(resultJsonArray);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return reviewList;
+
+        }
+
+        private static List<Review> parseReviewResults(JSONArray jsonArray) throws JSONException {
             List<Review> reviewList = new ArrayList<>();
 
             for(int jsonObjectIndex = 0; jsonObjectIndex < jsonArray.length(); jsonObjectIndex++){
                 JSONObject jsonObject = jsonArray.getJSONObject(jsonObjectIndex);
                 String authorName, content, url;
-                authorName = (jsonObject.has(AUTHOR_NODE))?jsonObject.getString(AUTHOR_NODE):NULL;
-                content = (jsonObject.has(CONTENT_NODE))?jsonObject.getString(CONTENT_NODE):NULL;
-                url = (jsonObject.has(URL_NODE))?jsonObject.getString(URL_NODE):NULL;
+                authorName = (jsonObject.has(REVIEW_AUTHOR_NODE))?jsonObject.getString(REVIEW_AUTHOR_NODE):NULL;
+                content = (jsonObject.has(REVIEW_CONTENT_NODE))?jsonObject.getString(REVIEW_CONTENT_NODE):NULL;
+                url = (jsonObject.has(REVIEW_URL_NODE))?jsonObject.getString(REVIEW_URL_NODE):NULL;
 
                 reviewList.add(
                         new Review(
@@ -147,6 +172,28 @@ public class ParserJSON {
             }
 
             return reviewList;
+        }
+
+        private static List<Trailer> parseTrailerResults(JSONArray jsonArray) throws JSONException {
+            List<Trailer> trailerList = new ArrayList<>();
+
+            for(int jsonObjectIndex = 0; jsonObjectIndex < jsonArray.length(); jsonObjectIndex++){
+                JSONObject jsonObject = jsonArray.getJSONObject(jsonObjectIndex);
+                String trailerName, trailerType, trailerKey;
+                trailerName = (jsonObject.has(TRAILER_NAME_NODE))?jsonObject.getString(TRAILER_NAME_NODE):NULL;
+                trailerType = (jsonObject.has(TRAILER_TYPE_NODE))?jsonObject.getString(TRAILER_TYPE_NODE):NULL;
+                trailerKey = (jsonObject.has(TRAILER_KEY_NODE))?jsonObject.getString(TRAILER_KEY_NODE):NULL;
+
+                trailerList.add(
+                        new Trailer(
+                                trailerName,
+                                trailerType,
+                                trailerKey
+                        )
+                );
+            }
+
+            return trailerList;
         }
     }
 }

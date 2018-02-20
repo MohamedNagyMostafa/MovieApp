@@ -8,6 +8,6 @@ import java.util.List;
  * Created by Mohamed Nagy on 2/17/2018.
  */
 
-public interface NetworkReviewsCallback<T> extends NetworkConnetionsCallback<T>{
+public interface NetworkModelsListCallback<T> extends NetworkConnetionsCallback<T>{
     void updateUi(T reviewList);
 }

@@ -13,6 +13,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,17 +30,28 @@ import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.movie_details.ui_helper.TrailersAdapter;
 import com.example.mohamednagy.myapplication.Ui.movie_main_list.ui_helper.FavoriteStarListener;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.example.mohamednagy.myapplication.Ui.reviews_list.ReviewsActivity;
 import com.example.mohamednagy.myapplication.database.MovieContract;
 import com.example.mohamednagy.myapplication.helperClasses.MovieDataBaseControl;
 import com.example.mohamednagy.myapplication.helperClasses.Utility;
+import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkModelsListCallback;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkModelListLoader;
+import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderModelListLaunch;
+import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderMoviesLaunch;
+import com.example.mohamednagy.myapplication.model.Review;
+import com.example.mohamednagy.myapplication.model.Trailer;
 import com.example.mohamednagy.myapplication.saver.DataSaver;
+import com.example.mohamednagy.myapplication.video.VideoHandler;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class DetailsFragment extends Fragment
-    implements LoaderManager.LoaderCallbacks<Cursor> {
+    implements LoaderManager.LoaderCallbacks<Cursor>, NetworkModelsListCallback<List<Trailer>> {
 
     private String imageURL;
     private Uri uri ;
@@ -47,7 +61,8 @@ public class DetailsFragment extends Fragment
 
     private static FavoriteStarListener mFavoriteStarListener;
     private ScreenViewHolder.DetailsViewHolder mDetailsViewHolder;
-    
+    private NetworkLoaderModelListLaunch<Trailer> networkLoaderModelListLaunch;
+    private TrailersAdapter mTrailersAdapter;
 
     private DataSaver.DetailsActivityData mDetailsDataSaver;
 
@@ -143,8 +158,12 @@ public class DetailsFragment extends Fragment
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
+        mTrailersAdapter = new TrailersAdapter(null,
+                new VideoHandler(mDetailsViewHolder.buildYoutubeFrame(getChildFragmentManager()), getContext()),
+                mDetailsViewHolder);
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
+
         Bundle bundle = getArguments();
 
         if(bundle != null) {
@@ -152,7 +171,7 @@ public class DetailsFragment extends Fragment
             //Log.e("bundle","is not null");
         }
 
-       
+
         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setColorSchemeResources(R.color.colorPrimaryDark);
         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
@@ -162,6 +181,12 @@ public class DetailsFragment extends Fragment
         /// scrollbar for overview TextView
         mDetailsViewHolder.OVERVIEW_TEXT_VIEW.setMovementMethod(new ScrollingMovementMethod());
         mDetailsDataSaver = new DataSaver.DetailsActivityData();
+        // Recycle Settings.
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setLayoutManager(layoutManager);
+        mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setItemAnimator(new DefaultItemAnimator());
+        mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setAdapter(mTrailersAdapter);
 
         if(savedInstanceState != null){
             Log.e("save","done");
@@ -256,6 +281,8 @@ public class DetailsFragment extends Fragment
 
         movieId = data.getInt(MovieDataBaseControl.getMovieId(columnsCount));
 
+        // Start load trailers.
+        trailersLoad();
         // image background
         imageURL = BACKDROP_IMAGE_DATABASE;
 
@@ -400,7 +427,7 @@ public class DetailsFragment extends Fragment
                 openReviewsScreen();
             else
                 Toast.makeText(getContext(),"Please wait until image loading be completed", Toast.LENGTH_LONG).show();
-            
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -467,5 +494,27 @@ public class DetailsFragment extends Fragment
         Intent reviewScreenIntent = new Intent(getActivity(), ReviewsActivity.class);
         reviewScreenIntent.putExtra(Utility.ExtrasHandler.MOVIE_EXTRA_KEY,  String.valueOf(movieId));
         getActivity().startActivity(reviewScreenIntent);
+    }
+
+    @Override
+    public void updateUi(List<Trailer> trailerList) {
+        Log.e("update ui", "done");
+        mTrailersAdapter.swapList(trailerList);
+        mTrailersAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Trailer>> networkLoader, @Nullable Boolean dataChanged) {
+        getLoaderManager().initLoader(DataNetworkModelListLoader.TRAILERS_LOADER_ID, null, networkLoader);
+    }
+
+    @Override
+    public DataNetworkLoader<List<Trailer>> createNetworkLoader() {
+        return new DataNetworkModelListLoader<>(getContext(), String.valueOf(movieId));
+    }
+
+    private void trailersLoad(){
+        networkLoaderModelListLaunch = new NetworkLoaderModelListLaunch<Trailer>(this);
+        networkLoaderModelListLaunch.execute();
     }
 }
