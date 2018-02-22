@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Mohamed Nagy on 2/19/2018.
  */
 
-abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
+public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
     private List<Trailer> mTrailerList;
     private YoutubeVideoFragmentHandler mYoutubeVideoFragmentHandler;
 
@@ -40,9 +40,7 @@ abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHol
         holder.TRAILER_IMAGE_VIEW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "clicked", Toast.LENGTH_SHORT).show();
-                onTrailerClick();
-                mYoutubeVideoFragmentHandler.setUrlAndStart(trailer.getVideoKey());
+                mYoutubeVideoFragmentHandler.setVideoKeyAndPlay(trailer.getVideoKey());
             }
         });
     }
@@ -55,7 +53,5 @@ abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHol
     public void swapList(List<Trailer> trailerList){
         mTrailerList = trailerList;
     }
-
-    public abstract void onTrailerClick();
 
 }

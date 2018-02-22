@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -42,6 +43,7 @@ import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoad
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkModelListLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderModelListLaunch;
 import com.example.mohamednagy.myapplication.model.Trailer;
+import com.example.mohamednagy.myapplication.model.YoutubeVideo;
 import com.example.mohamednagy.myapplication.saver.DataSaver;
 import com.example.mohamednagy.myapplication.video.YoutubeVideoFragmentHandler;
 import com.squareup.picasso.Picasso;
@@ -62,6 +64,7 @@ public class DetailsFragment extends Fragment
     private ScreenViewHolder.DetailsViewHolder mDetailsViewHolder;
     private NetworkLoaderModelListLaunch<Trailer> networkLoaderModelListLaunch;
     private TrailersAdapter mTrailersAdapter;
+    private YoutubeVideoFragmentHandler mYoutubeVideoFragmentHandler;
 
     private DataSaver.DetailsActivityData mDetailsDataSaver;
 
@@ -73,6 +76,33 @@ public class DetailsFragment extends Fragment
                         mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
                         downloadBackDropImage(imageURL);
                     }
+                }
+            };
+
+    private YoutubeVideoFragmentHandler.OnYoutubeVideoHandlerListener onYoutubeVideoHandlerListener =
+            new YoutubeVideoFragmentHandler.OnYoutubeVideoHandlerListener() {
+                @Override
+                public void onLoading() {
+                    Log.e("youtube","youtube loading called succ");
+                    handleUiVideoPlayingEvent();
+                }
+
+                @Override
+                public void onEnding() {
+                    Log.e("youtube","youtube end called succ");
+                    handleUiVideoStopEvent();
+                }
+
+                @Override
+                public void onPause() {
+                    Log.e("youtube","youtube pause called succ");
+                    handleUiVideoPauseEvent();
+                }
+
+                @Override
+                public void onPlay() {
+                    Log.e("youtube","youtube play called succ");
+                    handleUiVideoPlayingEvent();
                 }
             };
 
@@ -157,15 +187,7 @@ public class DetailsFragment extends Fragment
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
-        mTrailersAdapter = new TrailersAdapter(null, createVideoHandler()) {
-            @Override
-            public void onTrailerClick() {
-                handleUiVideoPlayingEvent();
-            }
-        };
-        if(savedInstanceState == null){
-            Log.e("saveInstance","null");
-        }
+
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -191,7 +213,6 @@ public class DetailsFragment extends Fragment
                 LinearLayoutManager.HORIZONTAL, false);
         mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setLayoutManager(layoutManager);
         mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setItemAnimator(new DefaultItemAnimator());
-        mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setAdapter(mTrailersAdapter);
 
         if(rootView.findViewById(R.id.land_space_mode) != null){
 
@@ -442,6 +463,11 @@ public class DetailsFragment extends Fragment
                 mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.getLayoutManager().onSaveInstanceState());
         outState.putParcelableArrayList(mDetailsDataSaver.DATA_RECYCLE_VIEW_ITEMS_ID,
                 trailersList);
+
+        if(mYoutubeVideoFragmentHandler.getState() != YoutubeVideo.ENDED &&
+                mYoutubeVideoFragmentHandler.getState() != YoutubeVideo.IDLE)
+        outState.putParcelable(mDetailsDataSaver.DATA_YOUTUBE_VIDEO_HANDLING_ID,
+                mYoutubeVideoFragmentHandler.onSaveInstanceState());
     }
 
 
@@ -517,36 +543,6 @@ public class DetailsFragment extends Fragment
         networkLoaderModelListLaunch.execute();
     }
 
-    private YoutubeVideoFragmentHandler createVideoHandler(){
-
-        return new YoutubeVideoFragmentHandler(getFragmentManager()) {
-            @Override
-            public void onPlaying() {
-                handleUiVideoPlayingEvent();
-            }
-
-            @Override
-            public void onPaused() {
-                handleUiVideoPauseEvent();
-            }
-
-            @Override
-            public void onStopped() {
-                Toast.makeText(getContext(),"strop",Toast.LENGTH_SHORT).show();
-                handleUiVideoStopEvent();
-            }
-
-            @Override
-            public void onBuffering(boolean isBuffering) {
-            }
-
-            @Override
-            public void onSeekTo(int i) {
-
-            }
-        };
-    }
-
     private void handleUiVideoPlayingEvent(){
         getActivity().findViewById(R.id.detail_toolbar).setVisibility(View.GONE);
         if(mDetailsViewHolder.FAVORITE_LAYOUT != null){
@@ -564,6 +560,7 @@ public class DetailsFragment extends Fragment
         }else{
             mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.setVisibility(View.VISIBLE);
         }
+        mDetailsViewHolder.VIDEO_FRAME_LAYOUT.setVisibility(View.VISIBLE);
     }
 
     private void handleUiVideoStopEvent(){
@@ -574,6 +571,7 @@ public class DetailsFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         if(savedInstanceState != null) {
 
             String[] savedData = savedInstanceState.getStringArray(mDetailsDataSaver.DATA_SAVER_ID);
@@ -595,15 +593,36 @@ public class DetailsFragment extends Fragment
                     bitmapImage
             );
 
-            mTrailersAdapter.swapList(trailersList);
-
             mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.getLayoutManager().onRestoreInstanceState(
                     savedInstanceState.getParcelable(mDetailsDataSaver.DATA_RECYCLE_VIEW_POSITION_ID)
             );
+            Parcelable youtubeParcelable = savedInstanceState.getParcelable(mDetailsDataSaver.DATA_YOUTUBE_VIDEO_HANDLING_ID);
+
+            if(youtubeParcelable != null) {
+                mYoutubeVideoFragmentHandler = (YoutubeVideoFragmentHandler) getFragmentManager()
+                        .findFragmentById(R.id.movie_trailer_video_view);
+                mYoutubeVideoFragmentHandler.onRestoreInstanceState(youtubeParcelable);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.movie_trailer_video_view, mYoutubeVideoFragmentHandler, "").commit();
+                mYoutubeVideoFragmentHandler.setOnYoutubeVideoHandlerListener(onYoutubeVideoHandlerListener);
+            }
+            mTrailersAdapter = new TrailersAdapter(trailersList, mYoutubeVideoFragmentHandler);
+            mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setAdapter(mTrailersAdapter);
+
         }else {
             /// Set UI
             Log.e("update bundle","null");
             getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, this);
+            mYoutubeVideoFragmentHandler = new YoutubeVideoFragmentHandler();
+            mYoutubeVideoFragmentHandler.setOnYoutubeVideoHandlerListener(onYoutubeVideoHandlerListener);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.movie_trailer_video_view, mYoutubeVideoFragmentHandler, "").commit();
+            mTrailersAdapter = new TrailersAdapter(null, mYoutubeVideoFragmentHandler);
+            mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setAdapter(mTrailersAdapter);
+
         }
+
+
+
     }
 }

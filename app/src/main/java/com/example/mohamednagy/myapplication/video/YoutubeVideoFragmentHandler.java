@@ -2,6 +2,7 @@ package com.example.mohamednagy.myapplication.video;
 
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.example.mohamednagy.myapplication.BuildConfig;
 import com.example.mohamednagy.myapplication.R;
@@ -14,13 +15,13 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
  * Created by Mohamed Nagy on 2/19/2018.
  */
 
-abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
+public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
 
     private YoutubeVideo mYoutubeVideo;
     private YouTubePlayer mYoutubePlayer;
     private OnYoutubeVideoHandlerListener mOnYoutubeVideoHandlerListener;
 
-    protected YoutubeVideoFragmentHandler(){
+    public YoutubeVideoFragmentHandler(){
         init();
     }
 
@@ -32,6 +33,8 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restore) {
                 if(youTubePlayer != null){
                     mYoutubePlayer = youTubePlayer;
+                    if(mOnYoutubeVideoHandlerListener != null)
+                        setYoutubePlayerListener();
                 }
             }
 
@@ -47,13 +50,8 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
 
     public void setOnYoutubeVideoHandlerListener(OnYoutubeVideoHandlerListener onYoutubeVideoHandlerListener){
         mOnYoutubeVideoHandlerListener = onYoutubeVideoHandlerListener;
-        setYoutubePlayerListener();
-    }
-
-    public interface OnYoutubeVideoHandlerListener{
-        void onLoading();
-        void onEnding();
-        void onPause();
+        if(mYoutubePlayer != null)
+            setYoutubePlayerListener();
     }
 
     private void setYoutubePlayerListener(){
@@ -61,6 +59,7 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
             @Override
             public void onPlaying() {
                 mYoutubeVideo.setState(YoutubeVideo.RUNNING);
+                mOnYoutubeVideoHandlerListener.onPlay();
             }
 
             @Override
@@ -88,8 +87,13 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
         mYoutubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
             @Override
             public void onLoading() {
-                mYoutubeVideo.setState(YoutubeVideo.LOADING);
-                mOnYoutubeVideoHandlerListener.onLoading();
+                // Check to detect rotation during pause.
+                if(mYoutubeVideo.getState() == YoutubeVideo.RESTORING_PAUSE) {
+                    mOnYoutubeVideoHandlerListener.onPause();
+                }else {
+                    mYoutubeVideo.setState(YoutubeVideo.LOADING);
+                    mOnYoutubeVideoHandlerListener.onLoading();
+                }
             }
 
             @Override
@@ -121,12 +125,16 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
 
     public Parcelable onSaveInstanceState(){
         mYoutubeVideo.setDuration(mYoutubePlayer.getCurrentTimeMillis());
+        // detect if device is rotated.
+        if(mYoutubeVideo.getState() == YoutubeVideo.PAUSE)
+            mYoutubeVideo.setState(YoutubeVideo.RESTORING_PAUSE);
+
         return mYoutubeVideo;
     }
 
     public void onRestoreInstanceState(Parcelable parcelable){
         mYoutubeVideo = (YoutubeVideo) parcelable;
-        videoHandling();
+        reinitialized();
     }
 
     public void setVideoKeyAndPlay(String key){
@@ -136,8 +144,8 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
     }
 
     private void videoHandling(){
-
         switch (mYoutubeVideo.getState()){
+            case YoutubeVideo.RESTORING_PAUSE:
             case YoutubeVideo.PAUSE:
                 mYoutubePlayer.loadVideo(mYoutubeVideo.getKey(), mYoutubeVideo.getDuration());
                 mYoutubePlayer.pause();
@@ -148,9 +156,37 @@ abstract public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFr
                 break;
             case YoutubeVideo.LOADING:
             case YoutubeVideo.IDLE:
+                Log.e("youtube","youtube key " + mYoutubeVideo.getKey());
                 mYoutubePlayer.loadVideo(mYoutubeVideo.getKey());
                 mYoutubePlayer.play();
+                break;
         }
+    }
+
+    private void reinitialized(){
+        initialize(BuildConfig.GOOGLE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restore) {
+                if(youTubePlayer != null){
+                    Log.e("youtube","youtube reinti done");
+                    mYoutubePlayer = youTubePlayer;
+                    if(mOnYoutubeVideoHandlerListener != null)
+                        setYoutubePlayerListener();
+                    videoHandling();
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+            }
+        });
+    }
+
+    public interface OnYoutubeVideoHandlerListener{
+        void onLoading();
+        void onEnding();
+        void onPause();
+        void onPlay();
     }
 
 }

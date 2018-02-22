@@ -11,11 +11,12 @@ import com.google.android.youtube.player.YouTubePlayer;
  */
 
 public class YoutubeVideo implements Parcelable {
-    public static final int PAUSE   = 0x1;
-    public static final int RUNNING = 0x2;
-    public static final int LOADING = 0x3;
-    public static final int ENDED   = 0x4;
-    public static final int IDLE    = 0x5;
+    public static final int PAUSE           = 0x1;
+    public static final int RUNNING         = 0x2;
+    public static final int LOADING         = 0x3;
+    public static final int ENDED           = 0x4;
+    public static final int IDLE            = 0x5;
+    public static final int RESTORING_PAUSE = 0x6;
 
     private String mKey;
     private Integer mDuration;
