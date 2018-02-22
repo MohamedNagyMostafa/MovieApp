@@ -58,14 +58,20 @@ public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
         mYoutubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
             @Override
             public void onPlaying() {
+                Log.e("youtube","youtube onPlaying");
+
                 mYoutubeVideo.setState(YoutubeVideo.RUNNING);
                 mOnYoutubeVideoHandlerListener.onPlay();
             }
 
             @Override
             public void onPaused() {
-                mYoutubeVideo.setState(YoutubeVideo.PAUSE);
-                mOnYoutubeVideoHandlerListener.onPause();
+                // avoid called pause when review fragment is started.
+                // and no video is in running state or pause state.
+                if(mYoutubeVideo.getState() != YoutubeVideo.IDLE) {
+                    mYoutubeVideo.setState(YoutubeVideo.PAUSE);
+                    mOnYoutubeVideoHandlerListener.onPause();
+                }
             }
 
             @Override
@@ -87,6 +93,8 @@ public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
         mYoutubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
             @Override
             public void onLoading() {
+                Log.e("youtube","youtube onLoading");
+
                 // Check to detect rotation during pause.
                 if(mYoutubeVideo.getState() == YoutubeVideo.RESTORING_PAUSE) {
                     mOnYoutubeVideoHandlerListener.onPause();
@@ -181,6 +189,10 @@ public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
             }
         });
     }
+    // avoid leaking in memory.
+    public void release() {
+        mYoutubePlayer.release();
+    }
 
     public interface OnYoutubeVideoHandlerListener{
         void onLoading();
@@ -188,5 +200,6 @@ public class YoutubeVideoFragmentHandler extends YouTubePlayerSupportFragment{
         void onPause();
         void onPlay();
     }
+
 
 }

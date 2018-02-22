@@ -622,7 +622,15 @@ public class DetailsFragment extends Fragment
 
         }
 
+    }
 
+    /**
+     * To avoid leaking in memory.
+     */
 
+    @Override
+    public void onDestroy() {
+        mYoutubeVideoFragmentHandler.release();
+        super.onDestroy();
     }
 }
