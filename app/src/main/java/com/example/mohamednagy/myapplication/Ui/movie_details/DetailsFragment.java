@@ -13,7 +13,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.R;
@@ -43,15 +41,12 @@ import com.example.mohamednagy.myapplication.loaderTasks.callbacks.NetworkModels
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.loaders.DataNetworkModelListLoader;
 import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderModelListLaunch;
-import com.example.mohamednagy.myapplication.loaderTasks.luncher.NetworkLoaderMoviesLaunch;
-import com.example.mohamednagy.myapplication.model.Review;
 import com.example.mohamednagy.myapplication.model.Trailer;
 import com.example.mohamednagy.myapplication.saver.DataSaver;
-import com.example.mohamednagy.myapplication.video.VideoHandler;
+import com.example.mohamednagy.myapplication.video.YoutubeVideoFragmentHandler;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailsFragment extends Fragment
     implements LoaderManager.LoaderCallbacks<Cursor>, NetworkModelsListCallback<ArrayList<Trailer>> {
@@ -522,9 +517,9 @@ public class DetailsFragment extends Fragment
         networkLoaderModelListLaunch.execute();
     }
 
-    private VideoHandler createVideoHandler(){
+    private YoutubeVideoFragmentHandler createVideoHandler(){
 
-        return new VideoHandler(getFragmentManager()) {
+        return new YoutubeVideoFragmentHandler(getFragmentManager()) {
             @Override
             public void onPlaying() {
                 handleUiVideoPlayingEvent();

@@ -8,12 +8,9 @@ import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
-import com.example.mohamednagy.myapplication.helperClasses.Utility;
-import com.example.mohamednagy.myapplication.model.Review;
 import com.example.mohamednagy.myapplication.model.Trailer;
-import com.example.mohamednagy.myapplication.video.VideoHandler;
+import com.example.mohamednagy.myapplication.video.YoutubeVideoFragmentHandler;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -22,11 +19,11 @@ import java.util.List;
 
 abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
     private List<Trailer> mTrailerList;
-    private VideoHandler mVideoHandler;
+    private YoutubeVideoFragmentHandler mYoutubeVideoFragmentHandler;
 
-    public TrailersAdapter(List<Trailer> trailerList, VideoHandler videoHandler){
+    public TrailersAdapter(List<Trailer> trailerList, YoutubeVideoFragmentHandler youtubeVideoFragmentHandler){
         mTrailerList = trailerList;
-        mVideoHandler = videoHandler;
+        mYoutubeVideoFragmentHandler = youtubeVideoFragmentHandler;
     }
 
     @Override
@@ -45,7 +42,7 @@ abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHol
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "clicked", Toast.LENGTH_SHORT).show();
                 onTrailerClick();
-                mVideoHandler.setUrlAndStart(trailer.getVideoKey());
+                mYoutubeVideoFragmentHandler.setUrlAndStart(trailer.getVideoKey());
             }
         });
     }
