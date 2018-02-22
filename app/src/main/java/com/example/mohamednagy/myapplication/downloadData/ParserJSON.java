@@ -116,9 +116,9 @@ public class ParserJSON {
 
         private static final String NULL = "";
 
-        public static List<Review> getReviewDataFromJson(String jsonPage){
+        public static ArrayList<Review> getReviewDataFromJson(String jsonPage){
             assert jsonPage != null;
-            List<Review> reviewList = new ArrayList<>();
+            ArrayList<Review> reviewList = new ArrayList<>();
             try {
                 JSONObject reviewJsonObject = new JSONObject(jsonPage);
                 JSONArray resultJsonArray = (reviewJsonObject.has(RESULTS_NODE))?
@@ -134,9 +134,9 @@ public class ParserJSON {
 
         }
 
-        public static List<Trailer> getTrailerDataFromJson(String jsonPage){
+        public static ArrayList<Trailer> getTrailerDataFromJson(String jsonPage){
             assert jsonPage != null;
-            List<Trailer> reviewList = new ArrayList<>();
+            ArrayList<Trailer> reviewList = new ArrayList<>();
             try {
                 JSONObject reviewJsonObject = new JSONObject(jsonPage);
                 JSONArray resultJsonArray = (reviewJsonObject.has(RESULTS_NODE))?
@@ -152,8 +152,8 @@ public class ParserJSON {
 
         }
 
-        private static List<Review> parseReviewResults(JSONArray jsonArray) throws JSONException {
-            List<Review> reviewList = new ArrayList<>();
+        private static ArrayList<Review> parseReviewResults(JSONArray jsonArray) throws JSONException {
+            ArrayList<Review> reviewList = new ArrayList<>();
 
             for(int jsonObjectIndex = 0; jsonObjectIndex < jsonArray.length(); jsonObjectIndex++){
                 JSONObject jsonObject = jsonArray.getJSONObject(jsonObjectIndex);
@@ -174,8 +174,8 @@ public class ParserJSON {
             return reviewList;
         }
 
-        private static List<Trailer> parseTrailerResults(JSONArray jsonArray) throws JSONException {
-            List<Trailer> trailerList = new ArrayList<>();
+        private static ArrayList<Trailer> parseTrailerResults(JSONArray jsonArray) throws JSONException {
+            ArrayList<Trailer> trailerList = new ArrayList<>();
 
             for(int jsonObjectIndex = 0; jsonObjectIndex < jsonArray.length(); jsonObjectIndex++){
                 JSONObject jsonObject = jsonArray.getJSONObject(jsonObjectIndex);

@@ -15,6 +15,8 @@ public class DataSaver {
 
         public final String DATA_SAVER_ID = "details sc";
         public final String DATA_IMAGE_SAVER_ID = "details sc image";
+        public final String DATA_RECYCLE_VIEW_POSITION_ID = "recycle position sc";
+        public final String DATA_RECYCLE_VIEW_ITEMS_ID = "recycle items sc";
 
         public static final int MOVIE_ORIGINAL_TITLE = 0;
         public static final int MOVIE_ID =1;

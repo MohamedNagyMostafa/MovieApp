@@ -7,13 +7,14 @@ import android.util.Log;
 import com.example.mohamednagy.myapplication.downloadData.DownloadNetworkData;
 import com.example.mohamednagy.myapplication.model.Review;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 2/17/2018.
  */
 
-public class DataNetworkModelListLoader<T> extends DataNetworkLoader<List<T>> {
+public class DataNetworkModelListLoader<T> extends DataNetworkLoader<ArrayList<T>> {
     public static final int REVIEW_LOADER_ID = 0x02;
     public static final int TRAILERS_LOADER_ID = 0x03;
 
@@ -35,13 +36,13 @@ public class DataNetworkModelListLoader<T> extends DataNetworkLoader<List<T>> {
     @SuppressWarnings("unchecked")
     // As the T type while be equal to the dataType which will return from FetchxxxDataFromURL
     // If there's a suggestion for this situation, I will thankful.
-    public List<T> loadInBackground() {
+    public ArrayList<T> loadInBackground() {
         Log.e("enter load","done");
         switch (getId()){
             case REVIEW_LOADER_ID:
-                return (List<T>) DownloadNetworkData.FetchReviewDataFromURL(mMovieId);
+                return (ArrayList<T>) DownloadNetworkData.FetchReviewDataFromURL(mMovieId);
             case TRAILERS_LOADER_ID:
-                return (List<T>) DownloadNetworkData.FetchTrailerDataFromURL(mMovieId);
+                return (ArrayList<T>) DownloadNetworkData.FetchTrailerDataFromURL(mMovieId);
         }
 
         return null;

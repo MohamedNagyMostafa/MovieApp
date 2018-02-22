@@ -49,15 +49,17 @@ import com.example.mohamednagy.myapplication.saver.DataSaver;
 import com.example.mohamednagy.myapplication.video.VideoHandler;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsFragment extends Fragment
-    implements LoaderManager.LoaderCallbacks<Cursor>, NetworkModelsListCallback<List<Trailer>> {
+    implements LoaderManager.LoaderCallbacks<Cursor>, NetworkModelsListCallback<ArrayList<Trailer>> {
 
     private String imageURL;
     private Uri uri ;
     private Integer movieId;
     private Toolbar toolbar;
+    private ArrayList<Trailer> trailersList;
 
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
@@ -166,6 +168,9 @@ public class DetailsFragment extends Fragment
                 handleUiVideoPlayingEvent();
             }
         };
+        if(savedInstanceState == null){
+            Log.e("saveInstance","null");
+        }
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -193,31 +198,6 @@ public class DetailsFragment extends Fragment
         mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setItemAnimator(new DefaultItemAnimator());
         mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.setAdapter(mTrailersAdapter);
 
-        if(savedInstanceState != null){
-            Log.e("save","done");
-            String[] savedData = savedInstanceState.getStringArray(mDetailsDataSaver.DATA_SAVER_ID);
-            Bitmap bitmapImage = Utility.DataTypeHandling.convertByteArrayToBitmap(
-                    savedInstanceState.getByteArray(mDetailsDataSaver.DATA_IMAGE_SAVER_ID));
-
-            assert savedData != null;
-            // store data.
-            mDetailsDataSaver.setMovieData(savedData);
-            mDetailsDataSaver.setImageData(bitmapImage);
-            // set previous data.
-            mDetailsViewHolder.setValues(
-                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_ORIGINAL_TITLE]),
-                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_RELEASE_DATE]),
-                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_OVERVIEW]),
-                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_COUNT]),
-                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_RATE]),
-                    bitmapImage
-            );
-
-        } else if(bundle != null) {
-            /// Set UI
-            getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, this);
-        }
-
         if(rootView.findViewById(R.id.land_space_mode) != null){
 
             AppAnimation.landscapeAnimation(
@@ -235,6 +215,12 @@ public class DetailsFragment extends Fragment
         mFavoriteStarListener = favoriteStarListener;
     }
 
+    /**
+     * Get movie data from offline database.
+     * @param id
+     * @param args
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.e(uri.getPath(),String.valueOf(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)));
@@ -260,6 +246,11 @@ public class DetailsFragment extends Fragment
 
     }
 
+    /**
+     * After retrieving data from database
+     * @param loader
+     * @param data
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(!data.moveToFirst())
@@ -437,9 +428,12 @@ public class DetailsFragment extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.e("done", "saved");
+        super.onSaveInstanceState(outState);
+
         outState.putStringArray(
                 mDetailsDataSaver.DATA_SAVER_ID,
                 mDetailsDataSaver.getMovieData()
@@ -448,7 +442,11 @@ public class DetailsFragment extends Fragment
                 mDetailsDataSaver.DATA_IMAGE_SAVER_ID,
                 mDetailsDataSaver.getImageData()
         );
-        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(mDetailsDataSaver.DATA_RECYCLE_VIEW_POSITION_ID,
+                mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.getLayoutManager().onSaveInstanceState());
+        outState.putParcelableArrayList(mDetailsDataSaver.DATA_RECYCLE_VIEW_ITEMS_ID,
+                trailersList);
     }
 
 
@@ -501,19 +499,21 @@ public class DetailsFragment extends Fragment
     }
 
     @Override
-    public void updateUi(List<Trailer> trailerList) {
-        Log.e("update ui", "done");
-        mTrailersAdapter.swapList(trailerList);
-        mTrailersAdapter.notifyDataSetChanged();
+    public void updateUi(ArrayList<Trailer> trailerList) {
+        if(trailersList == null) {
+            this.trailersList = trailerList;
+            mTrailersAdapter.swapList(trailerList);
+            mTrailersAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Trailer>> networkLoader, @Nullable Boolean dataChanged) {
+    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<ArrayList<Trailer>> networkLoader, @Nullable Boolean dataChanged) {
         getLoaderManager().initLoader(DataNetworkModelListLoader.TRAILERS_LOADER_ID, null, networkLoader);
     }
 
     @Override
-    public DataNetworkLoader<List<Trailer>> createNetworkLoader() {
+    public DataNetworkLoader<ArrayList<Trailer>> createNetworkLoader() {
         return new DataNetworkModelListLoader<>(getContext(), String.valueOf(movieId));
     }
 
@@ -580,4 +580,39 @@ public class DetailsFragment extends Fragment
        mDetailsViewHolder.VIDEO_FRAME_LAYOUT.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+
+            String[] savedData = savedInstanceState.getStringArray(mDetailsDataSaver.DATA_SAVER_ID);
+            trailersList = savedInstanceState.getParcelableArrayList(mDetailsDataSaver.DATA_RECYCLE_VIEW_ITEMS_ID);
+            Bitmap bitmapImage = Utility.DataTypeHandling.convertByteArrayToBitmap(
+                    savedInstanceState.getByteArray(mDetailsDataSaver.DATA_IMAGE_SAVER_ID));
+
+            assert savedData != null;
+            // store data.
+            mDetailsDataSaver.setMovieData(savedData);
+            mDetailsDataSaver.setImageData(bitmapImage);
+            // set previous data.
+            mDetailsViewHolder.setValues(
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_ORIGINAL_TITLE]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_RELEASE_DATE]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_OVERVIEW]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_COUNT]),
+                    Utility.DataTypeHandling.optText(savedData[DataSaver.DetailsActivityData.MOVIE_VOTE_RATE]),
+                    bitmapImage
+            );
+
+            mTrailersAdapter.swapList(trailersList);
+
+            mDetailsViewHolder.MOVIE_TRAILER_RECYCLE_VIDE.getLayoutManager().onRestoreInstanceState(
+                    savedInstanceState.getParcelable(mDetailsDataSaver.DATA_RECYCLE_VIEW_POSITION_ID)
+            );
+        }else {
+            /// Set UI
+            Log.e("update bundle","null");
+            getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, this);
+        }
+    }
 }

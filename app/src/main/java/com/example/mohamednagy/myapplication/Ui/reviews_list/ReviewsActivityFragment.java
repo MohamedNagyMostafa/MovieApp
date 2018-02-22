@@ -29,7 +29,7 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ReviewsActivityFragment extends Fragment
-    implements NetworkModelsListCallback<List<Review>> {
+    implements NetworkModelsListCallback<ArrayList<Review>> {
 
     private ReviewsAdapter reviewsAdapter;
     private String movieId;
@@ -76,19 +76,19 @@ public class ReviewsActivityFragment extends Fragment
     }
 
     @Override
-    public void updateUi(List<Review> reviewList) {
+    public void updateUi(ArrayList<Review> reviewList) {
         reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(false);
         reviewsAdapter.swapList(reviewList);
         reviewsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<List<Review>> networkLoader, @Nullable Boolean dataChanged) {
+    public void launchNetworkLoader(LoaderManager.LoaderCallbacks<ArrayList<Review>> networkLoader, @Nullable Boolean dataChanged) {
         getLoaderManager().initLoader(DataNetworkModelListLoader.REVIEW_LOADER_ID, null, networkLoader);
     }
 
     @Override
-    public DataNetworkLoader<List<Review>> createNetworkLoader() {
+    public DataNetworkLoader<ArrayList<Review>> createNetworkLoader() {
         return new DataNetworkModelListLoader<>(getActivity(), movieId);
     }
 }

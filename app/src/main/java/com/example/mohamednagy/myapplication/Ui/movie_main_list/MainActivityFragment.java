@@ -137,11 +137,6 @@ public class MainActivityFragment extends Fragment
         mainViewHolder.SWIPE_REFRESH_LAYOUT.setColorSchemeResources(R.color.colorPrimaryDark);
         mainViewHolder.SWIPE_REFRESH_LAYOUT.setOnRefreshListener(onRefreshListener);
 
-        if(savedInstanceState != null){
-            mainActivitySaver.setGridViewState(
-                    savedInstanceState.getParcelable(DataSaver.MainActivityData.GRID_VIEW_STATE_ID)
-            );
-        }
         return rootView;
     }
 
@@ -530,5 +525,13 @@ public class MainActivityFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mainActivitySaver.setGridViewState(
+                    savedInstanceState.getParcelable(DataSaver.MainActivityData.GRID_VIEW_STATE_ID)
+            );
+        }
+    }
 }

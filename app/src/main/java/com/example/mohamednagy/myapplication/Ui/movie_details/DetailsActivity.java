@@ -22,15 +22,16 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        DetailsFragment detailsFragment =
-                new DetailsFragment();
-        detailsFragment.setArguments(bundle);
-        detailsFragment.setToolbar(toolbar);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.detail_container,detailsFragment,"").commit();
+        if(savedInstanceState == null) {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            DetailsFragment detailsFragment =
+                    new DetailsFragment();
+            detailsFragment.setArguments(bundle);
+            detailsFragment.setToolbar(toolbar);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, detailsFragment, "a").commit();
+        }
 
 
         setSupportActionBar(toolbar);

@@ -88,9 +88,9 @@ public class DownloadNetworkData {
         }
     }
 
-    public static List<Review> FetchReviewDataFromURL(String movieId) {
+    public static ArrayList<Review> FetchReviewDataFromURL(String movieId) {
         URL url = null;
-        List<Review> reviewList = new ArrayList<>();
+        ArrayList<Review> reviewList = new ArrayList<>();
 
         if (movieId != null) {
 
@@ -131,10 +131,10 @@ public class DownloadNetworkData {
         return reviewList;
     }
 
-    public static List<Trailer> FetchTrailerDataFromURL(String movieId) {
+    public static ArrayList<Trailer> FetchTrailerDataFromURL(String movieId) {
         Log.e("trailer","movie id :" + movieId);
         URL url = null;
-        List<Trailer> reviewList = new ArrayList<>();
+        ArrayList<Trailer> reviewList = new ArrayList<>();
 
         if (movieId != null) {
 
