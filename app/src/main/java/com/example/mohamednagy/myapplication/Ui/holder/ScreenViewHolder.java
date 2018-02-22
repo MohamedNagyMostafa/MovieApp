@@ -46,6 +46,7 @@ public class ScreenViewHolder {
         public final SwipeRefreshLayout SWIPE_REFERESH_LAYOUT;
         public final FloatingActionButton FLOATING_ACTION_BUTTON;
         public final RecyclerView MOVIE_TRAILER_RECYCLE_VIDE;
+        public final LinearLayout FAVORITE_LAYOUT;
 
         public DetailsViewHolder(View deatilsView){
             BACKDROP_IMAGE_VIEW = deatilsView.findViewById(R.id.backdrop_imageView);
@@ -68,16 +69,7 @@ public class ScreenViewHolder {
 
             MOVIE_TRAILER_RECYCLE_VIDE = deatilsView.findViewById(R.id.movie_trailer_recycle_view);
             VIDEO_FRAME_LAYOUT = deatilsView.findViewById(R.id.movie_trailer_video_view);
-        }
-
-        public YouTubePlayerSupportFragment buildYoutubeFrame(FragmentManager fragmentManager){
-            YouTubePlayerSupportFragment youtubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.movie_trailer_video_view, youtubePlayerFragment);
-            fragmentTransaction.commit();
-
-            return youtubePlayerFragment;
-
+            FAVORITE_LAYOUT = deatilsView.findViewById(R.id.favorite_layout);
         }
 
         public void setValues(String originalTitle, String date, String overView, String voteCount,

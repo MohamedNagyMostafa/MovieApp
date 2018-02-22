@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.R;
@@ -56,6 +57,7 @@ public class DetailsFragment extends Fragment
     private String imageURL;
     private Uri uri ;
     private Integer movieId;
+    private Toolbar toolbar;
 
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
@@ -159,8 +161,7 @@ public class DetailsFragment extends Fragment
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
         mTrailersAdapter = new TrailersAdapter(null,
-                new VideoHandler(mDetailsViewHolder.buildYoutubeFrame(getChildFragmentManager()), getContext()),
-                mDetailsViewHolder);
+                new VideoHandler(getFragmentManager(), mDetailsViewHolder, toolbar));
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -221,7 +222,6 @@ public class DetailsFragment extends Fragment
                     (RelativeLayout) rootView.findViewById(R.id.movie_image_component)
                     );
         }
-
 
         return rootView;
     }
@@ -516,5 +516,9 @@ public class DetailsFragment extends Fragment
     private void trailersLoad(){
         networkLoaderModelListLaunch = new NetworkLoaderModelListLaunch<Trailer>(this);
         networkLoaderModelListLaunch.execute();
+    }
+
+    public void setToolbar(Toolbar toolbar){
+        this.toolbar = toolbar;
     }
 }

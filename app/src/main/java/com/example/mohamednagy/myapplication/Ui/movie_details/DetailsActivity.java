@@ -21,28 +21,21 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Create dynamic fragment
-        if(savedInstanceState == null){
-            // Get Data Intent
-            /*
-             * Test
-             * Log.e("onCreate DetailActivity"," is called -----------");
-             */
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
 
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
-            DetailsFragment detailsFragment =
-                    new DetailsFragment();
-            detailsFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.detail_container,detailsFragment,"").commit();
-        }
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        DetailsFragment detailsFragment =
+                new DetailsFragment();
+        detailsFragment.setArguments(bundle);
+        detailsFragment.setToolbar(toolbar);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.detail_container,detailsFragment,"").commit();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
+
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        // Hide App name
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         try {
             ActionBar actionBar = getSupportActionBar();
 

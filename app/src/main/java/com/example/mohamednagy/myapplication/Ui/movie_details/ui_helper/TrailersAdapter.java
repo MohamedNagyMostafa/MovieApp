@@ -22,12 +22,10 @@ import java.util.List;
 public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
     private List<Trailer> mTrailerList;
     private VideoHandler mVideoHandler;
-    private ScreenViewHolder.DetailsViewHolder mDetailsViewHolder;
 
-    public TrailersAdapter(List<Trailer> trailerList, VideoHandler videoHandler, ScreenViewHolder.DetailsViewHolder detailsViewHolder){
+    public TrailersAdapter(List<Trailer> trailerList, VideoHandler videoHandler){
         mTrailerList = trailerList;
         mVideoHandler = videoHandler;
-        mDetailsViewHolder = detailsViewHolder;
     }
 
     @Override
@@ -44,9 +42,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
         holder.TRAILER_IMAGE_VIEW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    updateUi();
                     mVideoHandler.setUrlAndStart(trailer.getVideoKey());
-
             }
         });
     }
@@ -56,12 +52,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
         return (mTrailerList != null)?mTrailerList.size():0;
     }
 
-    private void updateUi(){
-        mDetailsViewHolder.VIDEO_FRAME_LAYOUT.setVisibility(View.VISIBLE);
-        mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setVisibility(View.GONE);
-        mDetailsViewHolder.TRAILER_ARROW_IMAGE_VIEW.setVisibility(View.GONE);
-        mDetailsViewHolder.TRAILER_LAYOUT.setVisibility(View.GONE);
-    }
 
     public void swapList(List<Trailer> trailerList){
         mTrailerList = trailerList;

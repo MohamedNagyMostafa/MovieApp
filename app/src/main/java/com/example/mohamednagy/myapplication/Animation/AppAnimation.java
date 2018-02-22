@@ -5,11 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 /**
  * Created by mohamednagy on 11/12/2016.
@@ -77,5 +80,42 @@ public class AppAnimation {
                     .setDuration(2000);
 
         }
+    }
+
+    public static void videoPlayingAnimation(@Nullable final LinearLayout favoriteLinearLayout, final Toolbar detailToolbar,
+                                             final FrameLayout trailerFrame){
+        if(favoriteLinearLayout != null)
+            favoriteLinearLayout.animate().alpha(0).setDuration(1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    favoriteLinearLayout.setVisibility(View.GONE);
+                }}
+            );
+        if(detailToolbar != null)
+            detailToolbar.animate().alpha(0).setDuration(1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    detailToolbar.setVisibility(View.GONE);
+                    Toast.makeText(detailToolbar.getContext(), "done",Toast.LENGTH_LONG).show();
+                }}
+            );
+        trailerFrame.setVisibility(View.VISIBLE);
+    }
+
+    public static void videoPauseAnimation(final LinearLayout favoriteLinearLayout, final Toolbar detailToolbar){
+        if(favoriteLinearLayout != null)
+            favoriteLinearLayout.animate().alpha(1).setDuration(1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    favoriteLinearLayout.setVisibility(View.VISIBLE);
+                }
+            });
+        if(detailToolbar != null)
+            detailToolbar.animate().alpha(1).setDuration(1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    detailToolbar.setVisibility(View.VISIBLE);
+                }
+            });
     }
 }

@@ -1,13 +1,20 @@
 package com.example.mohamednagy.myapplication.video;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
+import com.example.mohamednagy.myapplication.Animation.AppAnimation;
 import com.example.mohamednagy.myapplication.BuildConfig;
+import com.example.mohamednagy.myapplication.R;
+import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
@@ -17,35 +24,77 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 public class VideoHandler {
 
-    private final YouTubePlayerSupportFragment YOUTUBE_PLAYER_FRAGMENT;
-    private final Context CONTEXT;
+    private FragmentManager mFragmentManager;
+    private ScreenViewHolder.DetailsViewHolder mDetailsViewHolder;
+    private Toolbar mToolbar;
 
-    public VideoHandler(YouTubePlayerSupportFragment youTubePlayerView, Context context){
-        YOUTUBE_PLAYER_FRAGMENT = youTubePlayerView;
-        CONTEXT =context;
+    public VideoHandler(FragmentManager fragmentManager, ScreenViewHolder.DetailsViewHolder detailsViewHolder, Toolbar toolbar){
+        mFragmentManager = fragmentManager;
+        mDetailsViewHolder = detailsViewHolder;
+        mToolbar = toolbar;
     }
 
-
     public void setUrlAndStart(final String url){
-        YOUTUBE_PLAYER_FRAGMENT.initialize(BuildConfig.GOOGLE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+        buildYoutubeFrame().initialize(BuildConfig.GOOGLE_API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restore) {
                 if(youTubePlayer != null){
-                    Log.e("done","done");
-                    if(!b) {
-                        youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    setPlayerEvents(youTubePlayer);
+                    if(!restore) {
                         youTubePlayer.loadVideo(url);
+                    } else {
+                        AppAnimation.videoPlayingAnimation(mDetailsViewHolder.FAVORITE_LAYOUT,
+                                mToolbar, mDetailsViewHolder.VIDEO_FRAME_LAYOUT);
                         youTubePlayer.play();
                     }
-
                 }
             }
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                Toast.makeText(CONTEXT, "Failed to initialize.", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private YouTubePlayerSupportFragment buildYoutubeFrame(){
+        YouTubePlayerSupportFragment youtubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.movie_trailer_video_view, youtubePlayerFragment);
+        fragmentTransaction.commit();
+        return youtubePlayerFragment;
+
+    }
+
+    private void setPlayerEvents(YouTubePlayer youTubePlayer){
+        youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
+            @Override
+            public void onPlaying() {
+                AppAnimation.videoPlayingAnimation(mDetailsViewHolder.FAVORITE_LAYOUT,
+                        mToolbar, mDetailsViewHolder.VIDEO_FRAME_LAYOUT);
+            }
+
+            @Override
+            public void onPaused() {
+                AppAnimation.videoPauseAnimation(mDetailsViewHolder.FAVORITE_LAYOUT,
+                        mToolbar);
+            }
+
+            @Override
+            public void onStopped() {
+                AppAnimation.videoPauseAnimation(mDetailsViewHolder.FAVORITE_LAYOUT,
+                        mToolbar);
+            }
+
+            @Override
+            public void onBuffering(boolean b) {
+
+            }
+
+            @Override
+            public void onSeekTo(int i) {
+
+            }
+        });
+    }
 }
