@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,7 +59,6 @@ public class DetailsFragment extends Fragment
     private String imageURL;
     private Uri uri ;
     private Integer movieId;
-    private Toolbar toolbar;
     private ArrayList<Trailer> trailersList;
 
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
@@ -522,10 +522,6 @@ public class DetailsFragment extends Fragment
         networkLoaderModelListLaunch.execute();
     }
 
-    public void setToolbar(Toolbar toolbar){
-        this.toolbar = toolbar;
-    }
-
     private VideoHandler createVideoHandler(){
 
         return new VideoHandler(getFragmentManager()) {
@@ -557,7 +553,7 @@ public class DetailsFragment extends Fragment
     }
 
     private void handleUiVideoPlayingEvent(){
-        toolbar.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.detail_toolbar).setVisibility(View.GONE);
         if(mDetailsViewHolder.FAVORITE_LAYOUT != null){
             mDetailsViewHolder.FAVORITE_LAYOUT.setVisibility(View.GONE);
         }else{
@@ -567,7 +563,7 @@ public class DetailsFragment extends Fragment
     }
 
     private void handleUiVideoPauseEvent(){
-        toolbar.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.detail_toolbar).setVisibility(View.VISIBLE);
         if(mDetailsViewHolder.FAVORITE_LAYOUT != null){
             mDetailsViewHolder.FAVORITE_LAYOUT.setVisibility(View.VISIBLE);
         }else{

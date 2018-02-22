@@ -28,11 +28,9 @@ public class DetailsActivity extends AppCompatActivity {
             DetailsFragment detailsFragment =
                     new DetailsFragment();
             detailsFragment.setArguments(bundle);
-            detailsFragment.setToolbar(toolbar);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_container, detailsFragment, "a").commit();
         }
-
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

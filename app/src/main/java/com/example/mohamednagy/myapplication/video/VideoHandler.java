@@ -19,7 +19,6 @@ abstract public class VideoHandler implements  YouTubePlayer.PlaybackEventListen
 
     private FragmentManager mFragmentManager;
 
-
     protected VideoHandler(FragmentManager fragmentManager){
         mFragmentManager = fragmentManager;
     }
