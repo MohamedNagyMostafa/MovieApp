@@ -34,8 +34,8 @@ public class DetailsActivity extends AppCompatActivity {
 
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         try {
             ActionBar actionBar = getSupportActionBar();
 

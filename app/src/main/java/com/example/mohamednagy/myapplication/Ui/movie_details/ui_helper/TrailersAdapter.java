@@ -42,7 +42,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
         holder.TRAILER_IMAGE_VIEW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    mVideoHandler.setUrlAndStart(trailer.getVideoKey());
+                mVideoHandler.setUrlAndStart(trailer.getVideoKey());
             }
         });
     }
@@ -52,8 +52,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
         return (mTrailerList != null)?mTrailerList.size():0;
     }
 
-
     public void swapList(List<Trailer> trailerList){
         mTrailerList = trailerList;
     }
+
 }

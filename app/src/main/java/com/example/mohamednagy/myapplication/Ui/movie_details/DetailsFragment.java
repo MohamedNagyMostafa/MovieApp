@@ -160,8 +160,7 @@ public class DetailsFragment extends Fragment
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
-        mTrailersAdapter = new TrailersAdapter(null,
-                new VideoHandler(getFragmentManager(), mDetailsViewHolder, toolbar));
+        mTrailersAdapter = new TrailersAdapter(null, createVideoHandler());
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -521,4 +520,58 @@ public class DetailsFragment extends Fragment
     public void setToolbar(Toolbar toolbar){
         this.toolbar = toolbar;
     }
+
+    private VideoHandler createVideoHandler(){
+
+        return new VideoHandler(getFragmentManager()) {
+            @Override
+            public void onPlaying() {
+                handleUiVideoPlayingEvent();
+            }
+
+            @Override
+            public void onPaused() {
+                handleUiVideoPauseEvent();
+            }
+
+            @Override
+            public void onStopped() {
+                handleUiVideoStopEvent();
+            }
+
+            @Override
+            public void onBuffering(boolean isBuffering) {
+            }
+
+            @Override
+            public void onSeekTo(int i) {
+
+            }
+        };
+    }
+
+    private void handleUiVideoPlayingEvent(){
+        toolbar.setVisibility(View.GONE);
+        if(mDetailsViewHolder.FAVORITE_LAYOUT != null){
+            mDetailsViewHolder.FAVORITE_LAYOUT.setVisibility(View.GONE);
+        }else{
+            mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.setVisibility(View.GONE);
+        }
+        mDetailsViewHolder.VIDEO_FRAME_LAYOUT.setVisibility(View.VISIBLE);
+    }
+
+    private void handleUiVideoPauseEvent(){
+        toolbar.setVisibility(View.VISIBLE);
+        if(mDetailsViewHolder.FAVORITE_LAYOUT != null){
+            mDetailsViewHolder.FAVORITE_LAYOUT.setVisibility(View.VISIBLE);
+        }else{
+            mDetailsViewHolder.ORIGINAL_TITLE_TEXT_VIEW.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void handleUiVideoStopEvent(){
+        handleUiVideoPauseEvent();
+       mDetailsViewHolder.VIDEO_FRAME_LAYOUT.setVisibility(View.INVISIBLE);
+    }
+
 }

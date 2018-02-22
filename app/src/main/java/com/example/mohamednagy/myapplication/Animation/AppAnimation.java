@@ -81,41 +81,4 @@ public class AppAnimation {
 
         }
     }
-
-    public static void videoPlayingAnimation(@Nullable final LinearLayout favoriteLinearLayout, final Toolbar detailToolbar,
-                                             final FrameLayout trailerFrame){
-        if(favoriteLinearLayout != null)
-            favoriteLinearLayout.animate().alpha(0).setDuration(1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    favoriteLinearLayout.setVisibility(View.GONE);
-                }}
-            );
-        if(detailToolbar != null)
-            detailToolbar.animate().alpha(0).setDuration(1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    detailToolbar.setVisibility(View.GONE);
-                    Toast.makeText(detailToolbar.getContext(), "done",Toast.LENGTH_LONG).show();
-                }}
-            );
-        trailerFrame.setVisibility(View.VISIBLE);
-    }
-
-    public static void videoPauseAnimation(final LinearLayout favoriteLinearLayout, final Toolbar detailToolbar){
-        if(favoriteLinearLayout != null)
-            favoriteLinearLayout.animate().alpha(1).setDuration(1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    favoriteLinearLayout.setVisibility(View.VISIBLE);
-                }
-            });
-        if(detailToolbar != null)
-            detailToolbar.animate().alpha(1).setDuration(1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    detailToolbar.setVisibility(View.VISIBLE);
-                }
-            });
-    }
 }
