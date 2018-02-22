@@ -159,6 +159,7 @@
 
                         </LinearLayout>
 
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -261,15 +262,21 @@
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:alpha="0.2"
+                            android:background="@color/colorAccent" />
+
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="16dp"
                     android:id="@+id/movie_trailer_recycle_view"
                     android:layout_width="wrap_content"
                     android:layout_height="140dp"/>
-
             </LinearLayout>
 
         </ScrollView>
@@ -301,6 +308,7 @@
             android:layout_marginBottom="32dp"
             android:layout_width="wrap_content"
             app:rippleColor="#69f0ae"
+            android:layout_gravity="end"
             app:backgroundTint="@android:color/white"
             android:layout_height="wrap_content"
             app:fabSize="normal"

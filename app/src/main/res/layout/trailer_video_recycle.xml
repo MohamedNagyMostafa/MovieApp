@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="120dp"
+    android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
@@ -17,22 +17,31 @@
         <ImageView
             android:id="@+id/youtube_video_image_view"
             android:layout_width="140dp"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
+            android:layout_height="80dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@android:color/black"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/youtube_img" />
 
         <TextView
             android:id="@+id/trailer_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="8dp"
+
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@id/youtube_video_image_view"
             android:text="Lumiere Motion Poster"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/youtube_video_image_view"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,31 +59,7 @@
             app:layout_constraintStart_toStartOf="@+id/trailer_name_text_view"
             app:layout_constraintTop_toBottomOf="@+id/trailer_name_text_view" />
 
-        <View
-            android:layout_width="368dp"
-            android:layout_height="2dp"
-            android:background="@color/colorAccent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:layout_width="368dp"
-            android:layout_height="2dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="120dp"
-            android:layout_alignParentEnd="true"
-            android:background="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/trailer_type_text_view"

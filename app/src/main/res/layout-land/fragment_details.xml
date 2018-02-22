@@ -270,11 +270,18 @@
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:alpha="0.2"
+                            android:background="@color/colorAccent" />
+
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="16dp"
                     android:id="@+id/movie_trailer_recycle_view"
                     android:layout_width="wrap_content"
                     android:layout_height="140dp"/>
