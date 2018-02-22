@@ -27,6 +27,48 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <LinearLayout
+                android:id="@+id/review_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/reviews"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="16dp"
+                    android:text="No reviews to show"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:layout_gravity="center"
+                    android:paddingTop="8dp"
+                    android:text="@string/check_network"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="#A2AAB0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:text="then refresh reviews page"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="#A2AAB0"/>
+            </LinearLayout>
+
             <View
                 android:layout_width="8dp"
                 android:layout_height="match_parent"

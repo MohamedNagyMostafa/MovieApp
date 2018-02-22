@@ -1,5 +1,6 @@
 package com.example.mohamednagy.myapplication.Ui.movie_main_list;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -98,9 +99,9 @@ public class MainActivityFragment extends Fragment
                      */
 
                     }else{
-                        Toast.makeText(getActivity(),
+                        Snackbar.make(getView(),
                                 "Please wait until movies loading finish",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_LONG).show();
                     }
                 }
             };
@@ -186,7 +187,7 @@ public class MainActivityFragment extends Fragment
                     mainViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(Utility.LoaderHandler.getLoaderState());
 
                     if (!isFavoriteSetting()) {
-                        Toast.makeText(getActivity(),
+                        Snackbar.make(getView(),
                                 "Warning : This is old movies",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -225,7 +226,7 @@ public class MainActivityFragment extends Fragment
                     new NetworkLoaderMoviesLaunch(this, isSortChanged());
         }else{
 
-            Toast.makeText(getActivity(),
+            Snackbar.make(getView(),
                     "Check your network connection",
                     Toast.LENGTH_SHORT).show();
         }

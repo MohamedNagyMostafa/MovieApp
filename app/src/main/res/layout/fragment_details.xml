@@ -7,7 +7,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <View
+     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:alpha="0.5"
@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_detail"
@@ -277,6 +276,8 @@
                     android:id="@+id/movie_trailer_recycle_view"
                     android:layout_width="wrap_content"
                     android:layout_height="140dp"/>
+
+
             </LinearLayout>
 
         </ScrollView>

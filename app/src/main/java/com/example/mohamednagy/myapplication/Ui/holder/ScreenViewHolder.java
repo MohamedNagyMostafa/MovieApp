@@ -159,10 +159,12 @@ public class ScreenViewHolder {
 
         public RecyclerView REVIEW_RECYCLE_VIEW;
         public SwipeRefreshLayout SWIPE_REFRESH_LAYOUT;
+        public LinearLayout EMPTY_LAYOUT;
 
         public ReviewsViewHolder(View reviewsView){
             REVIEW_RECYCLE_VIEW = reviewsView.findViewById(R.id.recycle_view);
             SWIPE_REFRESH_LAYOUT = reviewsView.findViewById(R.id.swipe_refresh_review_list);
+            EMPTY_LAYOUT = reviewsView.findViewById(R.id.review_empty_view);
         }
 
         public static class AdapterViewHolder extends RecyclerView.ViewHolder{

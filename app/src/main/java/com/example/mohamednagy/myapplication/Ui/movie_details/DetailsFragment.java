@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -53,10 +54,10 @@ import java.util.ArrayList;
 public class DetailsFragment extends Fragment
     implements LoaderManager.LoaderCallbacks<Cursor>, NetworkModelsListCallback<ArrayList<Trailer>> {
 
-    private String imageURL;
     private Uri uri ;
     private Integer movieId;
     private ArrayList<Trailer> trailersList;
+    private int processes = 0;
 
     private static final int CURSOR_LOADER_DETAIL_ID = 4;
 
@@ -72,10 +73,8 @@ public class DetailsFragment extends Fragment
             new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    if(!imageURL.equals("null")) {
-                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
-                        downloadBackDropImage(imageURL);
-                    }
+                    mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
+                    getLoaderManager().initLoader(CURSOR_LOADER_DETAIL_ID, null, DetailsFragment.this);
                 }
             };
 
@@ -146,8 +145,7 @@ public class DetailsFragment extends Fragment
                         // Insert movie as favorite to database
                         setMovieAsFavoriteList(true);
 
-                        Toast.makeText(
-                                getActivity(),"Movie inserted in favorite list",Toast.LENGTH_SHORT)
+                        Snackbar.make(getView(),"Movie inserted in favorite list",Toast.LENGTH_LONG)
                                 .show();
 
                         /*
@@ -165,19 +163,10 @@ public class DetailsFragment extends Fragment
                         setFloatingActionButton();
                     } else {
                         mDetailsViewHolder.FLOATING_ACTION_BUTTON.setVisibility(View.INVISIBLE);
-                        Toast.makeText(
-                                getContext(), "The movie is deleted from favorite list",
+                        Snackbar.make(getView()
+                                , "The movie is deleted from favorite list",
                                 Toast.LENGTH_SHORT).show();
                     }
-                }
-            };
-
-    private View.OnClickListener onClickListenerTrailer =
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
                 }
             };
 
@@ -187,7 +176,7 @@ public class DetailsFragment extends Fragment
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
-
+        checkRefresh(0);
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -204,7 +193,6 @@ public class DetailsFragment extends Fragment
 
         /// set click listeners
         mDetailsViewHolder.FLOATING_ACTION_BUTTON.setOnClickListener(onFloatingClickListenerFavorite);
-        mDetailsViewHolder.TRAILER_LAYOUT.setOnClickListener(onClickListenerTrailer);
         /// scrollbar for overview TextView
         mDetailsViewHolder.OVERVIEW_TEXT_VIEW.setMovementMethod(new ScrollingMovementMethod());
         mDetailsDataSaver = new DataSaver.DetailsActivityData();
@@ -239,6 +227,8 @@ public class DetailsFragment extends Fragment
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        checkRefresh(1);
+
         Log.e(uri.getPath(),String.valueOf(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME)));
         if(uri.getPath().contains(MovieContract.MovieMainEntry.TABLE_NAME))
 
@@ -269,6 +259,8 @@ public class DetailsFragment extends Fragment
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        checkRefresh(-1);
+
         if(!data.moveToFirst())
             return;
 
@@ -295,10 +287,9 @@ public class DetailsFragment extends Fragment
         // Start load trailers.
         trailersLoad();
         // image background
-        imageURL = BACKDROP_IMAGE_DATABASE;
+        String imageURL = BACKDROP_IMAGE_DATABASE;
 
         if(!imageURL.equals("null")) {
-            mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
             downloadBackDropImage(imageURL);
         }else{
             mDetailsViewHolder.BACKDROP_IMAGE_VIEW.setImageResource(R.drawable.imageisnotvalidbackdrop);
@@ -437,7 +428,7 @@ public class DetailsFragment extends Fragment
             if(!mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.isRefreshing())
                 openReviewsScreen();
             else
-                Toast.makeText(getContext(),"Please wait until image loading be completed", Toast.LENGTH_LONG).show();
+                Snackbar.make(getView(),"Please wait until image loading be completed", Toast.LENGTH_LONG).show();
 
             return true;
         }
@@ -493,6 +484,7 @@ public class DetailsFragment extends Fragment
     }
 
     private void downloadBackDropImage(String imageURL){
+        checkRefresh(1);
         Picasso.with(getContext())
                 .load(Utility.UrlBuilder.createUrlImage(imageURL).toString())
                 .into(mDetailsViewHolder.BACKDROP_IMAGE_VIEW, new com.squareup.picasso.Callback() {
@@ -501,14 +493,13 @@ public class DetailsFragment extends Fragment
                         mDetailsDataSaver.setImageData(
                                 ((BitmapDrawable)mDetailsViewHolder.BACKDROP_IMAGE_VIEW.getDrawable())
                                         .getBitmap());
-
-                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+                        checkRefresh(-1);
                     }
 
                     @Override
                     public void onError() {
                         Log.e("image load","Error");
-                        mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+                        checkRefresh(-1);
                     }
                 });
     }
@@ -521,6 +512,7 @@ public class DetailsFragment extends Fragment
 
     @Override
     public void updateUi(ArrayList<Trailer> trailerList) {
+        checkRefresh(-1);
         if(trailersList == null) {
             this.trailersList = trailerList;
             mTrailersAdapter.swapList(trailerList);
@@ -530,6 +522,7 @@ public class DetailsFragment extends Fragment
 
     @Override
     public void launchNetworkLoader(LoaderManager.LoaderCallbacks<ArrayList<Trailer>> networkLoader, @Nullable Boolean dataChanged) {
+        checkRefresh(1);
         getLoaderManager().initLoader(DataNetworkModelListLoader.TRAILERS_LOADER_ID, null, networkLoader);
     }
 
@@ -632,5 +625,15 @@ public class DetailsFragment extends Fragment
     public void onDestroy() {
         mYoutubeVideoFragmentHandler.release();
         super.onDestroy();
+    }
+
+    public void checkRefresh(int value){
+        processes += value;
+        if(processes == 0){
+            mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(false);
+        }//else if(processes < 0){Toast.makeText(getContext(), "dsda",Toast.LENGTH_SHORT).show();}
+        else{
+            mDetailsViewHolder.SWIPE_REFERESH_LAYOUT.setRefreshing(true);
+        }
     }
 }

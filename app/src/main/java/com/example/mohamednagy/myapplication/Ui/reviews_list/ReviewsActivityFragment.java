@@ -1,6 +1,7 @@
 package com.example.mohamednagy.myapplication.Ui.reviews_list;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.reviews_list.ui_helper.ReviewsAdapter;
@@ -55,7 +57,6 @@ public class ReviewsActivityFragment extends Fragment
         reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(true);
                 networkLoaderModelListLaunch.execute();
             }
         });
@@ -77,6 +78,10 @@ public class ReviewsActivityFragment extends Fragment
 
     @Override
     public void updateUi(ArrayList<Review> reviewList) {
+        if(reviewList.size() > 0) {
+            reviewsViewHolder.EMPTY_LAYOUT.setVisibility(View.GONE);
+            Snackbar.make(getView(),"There is no reviews to show", Toast.LENGTH_LONG);
+        }
         reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(false);
         reviewsAdapter.swapList(reviewList);
         reviewsAdapter.notifyDataSetChanged();
@@ -84,6 +89,7 @@ public class ReviewsActivityFragment extends Fragment
 
     @Override
     public void launchNetworkLoader(LoaderManager.LoaderCallbacks<ArrayList<Review>> networkLoader, @Nullable Boolean dataChanged) {
+        reviewsViewHolder.SWIPE_REFRESH_LAYOUT.setRefreshing(true);
         getLoaderManager().initLoader(DataNetworkModelListLoader.REVIEW_LOADER_ID, null, networkLoader);
     }
 
