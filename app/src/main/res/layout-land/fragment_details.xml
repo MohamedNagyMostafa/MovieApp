@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/land_space_mode"
-    tools:context=".DetailsActivity"
+    tools:context=".Ui.movie_details.DetailsActivity"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:baselineAligned="true"
@@ -26,13 +26,19 @@
                 android:layout_height="match_parent"
                 android:rotation="-90">
 
-                <ImageView
-                    android:id="@+id/backdrop_imageView"
-                    android:contentDescription="@string/description_image"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="1"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/backdrop_imageView"
+                        android:contentDescription="@string/description_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="1"
+                        android:scaleType="centerCrop"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/movie_trailer"
@@ -51,6 +57,11 @@
 
                 </LinearLayout>
 
+                <FrameLayout
+                    android:id="@+id/movie_trailer_video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"/>
 
             </RelativeLayout>
 
@@ -70,7 +81,6 @@
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
-
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -178,7 +188,7 @@
                             android:gravity="top"
                             android:textSize="12sp"
                             android:alpha="0.7"
-                            android:textColor="@color/detailTextView"
+                            android:textColor="@color/colorPrimaryDark"
                             android:fontFamily="sans-serif-condensed"
                             android:layout_width="match_parent"
                             android:layout_height="32dp"
@@ -188,7 +198,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:alpha="0.2"
-                            android:background="@color/lineView" />
+                            android:background="@color/colorAccent" />
 
                         <TextView
                             android:id="@+id/vote_count_textView"
@@ -203,7 +213,7 @@
                             android:gravity="top"
                             android:textSize="12sp"
                             android:alpha="0.7"
-                            android:textColor="@color/detailTextView"
+                            android:textColor="@color/colorPrimaryDark"
                             android:fontFamily="sans-serif-condensed"
                             android:layout_width="match_parent"
                             android:layout_height="32dp"/>
@@ -212,7 +222,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:alpha="0.2"
-                            android:background="@color/lineView" />
+                            android:background="@color/colorAccent" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -241,7 +251,7 @@
                                 android:gravity="top"
                                 android:textSize="12sp"
                                 android:alpha="0.7"
-                                android:textColor="@color/detailTextView"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:fontFamily="sans-serif-condensed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
@@ -254,15 +264,27 @@
                                 android:textSize="12sp"
                                 android:alpha="0.7"
                                 android:paddingLeft="8dp"
-                                android:textColor="@color/detailTextView"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:layout_marginStart="1dp"
                                 android:fontFamily="sans-serif-condensed"/>
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:alpha="0.2"
+                            android:background="@color/colorAccent" />
+
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="16dp"
+                    android:id="@+id/movie_trailer_recycle_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="140dp"/>
 
             </LinearLayout>
 
@@ -281,7 +303,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:id="@+id/favorite_floating_btn"/>
-
 
     </RelativeLayout>
 

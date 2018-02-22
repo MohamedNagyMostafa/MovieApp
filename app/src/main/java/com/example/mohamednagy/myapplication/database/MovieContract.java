@@ -10,9 +10,9 @@ import android.provider.BaseColumns;
  */
 public class MovieContract {
 
-    public static final String CONTENT_AUTHORITY = "com.example.mohamednagy.myapplication";
+    static final String CONTENT_AUTHORITY = "com.example.mohamednagy.myapplication";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final String AUTO_INCREMENT = " AUTOINCREMENT";
 
@@ -41,10 +41,10 @@ public class MovieContract {
         public static final Uri MOVIE_MAIN_CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 
-        public static final String CONTENT_TYPE =
+        static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
-        public static final String CONTENT_ITEM_TYPE =
+        static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
 
@@ -74,7 +74,7 @@ public class MovieContract {
         public static final int IS_NOT_FAVORITE = 101;
 
         //TABLE BUILD COMPONENTS
-        public static final String CREATE_MOVIE_MAIN_TABLE = "CREATE TABLE " +
+        static final String CREATE_MOVIE_MAIN_TABLE = "CREATE TABLE " +
                 TABLE_NAME + "(" + _ID + INTEGER + PRIMARY_KEY + AUTO_INCREMENT + "," +
                 POSTER_IMAGE_COLUMN + BLOB + NOT_NULL + "," +
                 BACKDROP_IMAGE_COLUMN + TEXT + "," +
@@ -88,7 +88,7 @@ public class MovieContract {
                 String.valueOf(IS_NOT_FAVORITE)+"," +
                 UNIQUE +"("+ORIGINAL_TITLE_COLUMN+")"+ON_CONFLICT_REPLACE + ");";
 
-        public static Uri buildMovieContentUri(long id){
+        static Uri buildMovieContentUri(long id){
             return ContentUris.withAppendedId(MOVIE_MAIN_CONTENT_URI,id);
         }
 
@@ -101,10 +101,10 @@ public class MovieContract {
         public static final Uri MOVIE_FAVORITE_CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 
-        public static final String CONTENT_TYPE =
+        static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
-        public static final String CONTENT_ITEM_TYPE =
+        static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
 
@@ -125,10 +125,8 @@ public class MovieContract {
 
         public static final String OVERVIEW_MOVIE_COLUMN = "overview";
 
-        public static final int NUMBER_OF_COLUMNS =  9;
-
         //TABLE BUILD COMPONENTS
-        public static final String CREATE_FAVORITE_MOVIE_TABLE = "CREATE TABLE " +
+        static final String CREATE_FAVORITE_MOVIE_TABLE = "CREATE TABLE " +
                 TABLE_NAME + "(" + _ID + INTEGER + PRIMARY_KEY + AUTO_INCREMENT + "," +
                 POSTER_IMAGE_COLUMN + BLOB  + "," +
                 BACKDROP_IMAGE_COLUMN + TEXT + NOT_NULL + "," +
