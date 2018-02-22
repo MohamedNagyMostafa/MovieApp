@@ -30,11 +30,11 @@ abstract public class VideoHandler implements  YouTubePlayer.PlaybackEventListen
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean restore) {
                 if(youTubePlayer != null){
                     youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    youTubePlayer.setPlaybackEventListener(VideoHandler.this);
                     if(!restore) {
                         youTubePlayer.loadVideo(url);
                     }else{
                         youTubePlayer.play();
+                        youTubePlayer.setPlaybackEventListener(VideoHandler.this);
                     }
                 }
             }

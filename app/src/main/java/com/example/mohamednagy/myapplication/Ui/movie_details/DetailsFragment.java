@@ -160,7 +160,12 @@ public class DetailsFragment extends Fragment
 
         View rootView =  inflater.inflate(R.layout.fragment_details, container,false);
         mDetailsViewHolder = new ScreenViewHolder.DetailsViewHolder(rootView);
-        mTrailersAdapter = new TrailersAdapter(null, createVideoHandler());
+        mTrailersAdapter = new TrailersAdapter(null, createVideoHandler()) {
+            @Override
+            public void onTrailerClick() {
+                handleUiVideoPlayingEvent();
+            }
+        };
         /// Get data from MainActivity (Intent/Arguments)
         /// One/Two Pane
 
@@ -536,6 +541,7 @@ public class DetailsFragment extends Fragment
 
             @Override
             public void onStopped() {
+                Toast.makeText(getContext(),"strop",Toast.LENGTH_SHORT).show();
                 handleUiVideoStopEvent();
             }
 

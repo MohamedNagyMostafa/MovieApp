@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.mohamednagy.myapplication"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="26" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:testOnly="true"
+        android:theme="@style/AppTheme.NoActionBar" >
+        <activity android:name="com.example.mohamednagy.myapplication.Ui.movie_details.DetailsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mohamednagy.myapplication.Ui.movie_main_list.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.mohamednagy.myapplication.SettingsActivity"
+            android:label="@string/settings_title" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.mohamednagy.myapplication.Ui.movie_main_list.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.mohamednagy.myapplication.Ui.movie_main_list.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="com.example.mohamednagy.myapplication.database.MovieProvider"
+            android:authorities="com.example.mohamednagy.myapplication" />
+
+        <activity
+            android:name="com.example.mohamednagy.myapplication.Ui.reviews_list.ReviewsActivity"
+            android:label="@string/title_activity_reviews"
+            android:parentActivityName="com.example.mohamednagy.myapplication.Ui.movie_details.DetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="android.support.VERSION"
+            android:value="26.1.0" />
+        <meta-data
+            android:name="android.arch.lifecycle.VERSION"
+            android:value="27.0.0-SNAPSHOT" />
+
+        <provider
+            android:name="com.android.tools.ir.server.InstantRunContentProvider"
+            android:authorities="com.example.mohamednagy.myapplication.com.android.tools.ir.server.InstantRunContentProvider"
+            android:multiprocess="true" />
+    </application>
+
+</manifest>

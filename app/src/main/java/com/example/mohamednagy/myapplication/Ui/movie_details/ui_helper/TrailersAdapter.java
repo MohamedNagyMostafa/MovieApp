@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mohamednagy.myapplication.R;
 import com.example.mohamednagy.myapplication.Ui.holder.ScreenViewHolder;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by Mohamed Nagy on 2/19/2018.
  */
 
-public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
+abstract public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.DetailsViewHolder.MovieTrailerRecycle> {
     private List<Trailer> mTrailerList;
     private VideoHandler mVideoHandler;
 
@@ -42,6 +43,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
         holder.TRAILER_IMAGE_VIEW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "clicked", Toast.LENGTH_SHORT).show();
+                onTrailerClick();
                 mVideoHandler.setUrlAndStart(trailer.getVideoKey());
             }
         });
@@ -55,5 +58,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<ScreenViewHolder.Detai
     public void swapList(List<Trailer> trailerList){
         mTrailerList = trailerList;
     }
+
+    public abstract void onTrailerClick();
 
 }
