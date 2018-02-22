@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "E:\\MovieApp\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw640dp-v13\\values-sw640dp-v13.xml",
+            "map": [
+                {
+                    "source": "E:\\MovieApp\\app\\src\\main\\res\\values-sw640dp\\styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endLines": "4",
+                        "endColumns": "20",
+                        "endOffsets": "172"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "20",
+                        "endOffsets": "168"
+                    }
+                }
+            ]
+        }
+    ]
+}

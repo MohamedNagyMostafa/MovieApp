@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.mohamednagy.myapplication.DetailsActivity">
+    tools:context="com.example.mohamednagy.myapplication.Ui.movie_details.DetailsActivity">
 
     <include layout="@layout/content_detail" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_detail"
+        android:id="@+id/detail_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_gravity="top"
